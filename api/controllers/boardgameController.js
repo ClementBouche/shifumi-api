@@ -1,5 +1,5 @@
 'use strict';
-
+//https://www.boardgamegeek.com/xmlapi2/plays?username=cbouche
 var mongoose = require('mongoose');
 var request = require('request');
 var xml2js = require('xml2js');

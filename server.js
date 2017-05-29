@@ -3,6 +3,7 @@ var cors = require('cors');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Boardgame = require('./api/models/boardgameModel');
+var Play = require('./api/models/playModel');
 
 var app = express();
 app.use(cors());
@@ -12,8 +13,11 @@ app.use(bodyParser.json());
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/Boardgamedb');
 
-var routes = require('./api/routes/boardgameRoutes');
-routes(app);
+var boardgameRoutes = require('./api/routes/boardgameRoutes');
+boardgameRoutes(app);
+
+var playRoutes = require('./api/routes/playRoutes');
+playRoutes(app);
 
 var port = process.env.PORT || 3000;
 
