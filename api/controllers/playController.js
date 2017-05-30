@@ -6,13 +6,36 @@ var xml2js = require('xml2js');
 
 var Play = mongoose.model('Plays');
 
+Play.getPaginatedPlays = function(skip, limit, callback) {
+  Play.find(null, null, {
+      sort: { date: 1 },
+      skip: skip,
+      limit: limit
+    },
+    function(err, results) {
+      callback(err, results);
+    }
+  );
+}
+
 exports.list = function(req, res) {
   console.log("play controller list");
-  Play.find({}, function(err, play) {
-    if (err)
+  var size = 10 ;
+  if (req.query.size) {
+    size = req.query.size;
+  }
+  var page = 0 ;
+  if (req.query.page) {
+    page = req.query.page - 1;
+  }
+  var skip = page * size ;
+
+  Play.getPaginatedPlays(skip, size, function(err, plays) {
+    if(err) {
       res.send(err);
-    res.json(play);
-  });
+    }
+    res.json(plays);
+  })
 };
 
 exports.create = function(req, res) {
