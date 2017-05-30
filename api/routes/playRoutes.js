@@ -11,9 +11,9 @@ module.exports = function(app) {
     .put(play.update)
     .delete(play.delete);
 
-  app.route('/play-search')
+  app.route('/search/play')
     .get(play.search);
 
-  app.route('/play-search/:id')
+  app.route('/search/play/:id')
     .get(play.search_by_id);
 };

@@ -28,6 +28,13 @@ exports.create = function(req, res) {
 
 exports.read = function(req, res) {
   console.log("boardgame controller read");
+  // Boardgame.findOne({
+  //   objectid: req.params.boardgameid
+  // }, function(err, boardgame) {
+  //   if (err)
+  //     res.send(err);
+  //   res.json(boardgame);
+  // });
   Boardgame.findById(req.params.boardgameid, function(err, boardgame) {
     if (err)
       res.send(err);
@@ -98,8 +105,9 @@ exports.search = function(req, res) {
           })
         })
     });
-
 }
+
+
 
 exports.search_by_id = function(req, res) {
 
@@ -116,43 +124,59 @@ exports.search_by_id = function(req, res) {
       });
       response.on('end', () => {
         xml2js.parseString(xml, function (err, result) {
+          console.log("parsing success");
 
-            console.log("parsing success");
+          var data = result.boardgames.boardgame[0];
+          var objectid = data["$"].objectid ;
 
-            var data = result.boardgames.boardgame[0];
-
-            var boardgame = {
-              objectid: data["$"].objectid,
-              year_published: data.yearpublished[0],
-              min_players: data.minplayers[0],
-              max_players: data.maxplayers[0],
-              playing_time: data.playingtime[0],
-              min_play_time: data.minplaytime[0],
-              max_play_time: data.maxplaytime[0],
-              age: data.age[0],
-              name: data.name[0]["_"],
-              description: data.description[0],
-              thumbnail: data.thumbnail[0],
-              image: data.image[0],
-            } ;
-            for (var i = 0; i < data.name.length; i++) {
-              if(data.name[i]["$"]["primary"]) {
-                boardgame.name = data.name[i]["_"];
-              }
+          Boardgame.findOne({
+            objectid: objectid
+          }, function(err, result) {
+            // TODO erreur
+            if (err) {
+              console.log("erreur");
+              res.json({'message': 'erreur fatale'}) ;
             }
 
-            var new_boargame = new Boardgame(boardgame);
+            // TODO existe pas
+            if (!result) {
+              var boardgame = {
+                objectid: data["$"].objectid,
+                year_published: data.yearpublished[0],
+                min_players: data.minplayers[0],
+                max_players: data.maxplayers[0],
+                playing_time: data.playingtime[0],
+                min_play_time: data.minplaytime[0],
+                max_play_time: data.maxplaytime[0],
+                age: data.age[0],
+                name: data.name[0]["_"],
+                description: data.description[0],
+                thumbnail: data.thumbnail[0],
+                image: data.image[0],
+              } ;
+              for (var i = 0; i < data.name.length; i++) {
+                if(data.name[i]["$"]["primary"]) {
+                  boardgame.name = data.name[i]["_"];
+                }
+              }result
 
-            console.log(new_boargame);
+              var new_boargame = new Boardgame(boardgame);
 
-            new_boargame.save(function(err, boardgame) {
-              if (err)
-                res.send(err);
-              res.json(boardgame);
-            });
+              console.log(new_boargame);
 
+              new_boargame.save(function(err, boardgame) {
+                console.log("create new");
+                if (err)
+                  res.json({'message': 'erreur fatale'}) ;
+                res.json(boardgame);
+              });
+            }
+
+            // TODO existe
+            console.log("already exist");
+            res.json(result);
+          });
         });
       });
     });
-
 }
