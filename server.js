@@ -4,6 +4,8 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Boardgame = require('./api/models/boardgameModel');
 var Play = require('./api/models/playModel');
+var Player = require('./api/models/playerModel');
+var Location_ = require('./api/models/locationModel');
 
 var app = express();
 app.use(cors());
@@ -18,6 +20,12 @@ boardgameRoutes(app);
 
 var playRoutes = require('./api/routes/playRoutes');
 playRoutes(app);
+
+var playerRoutes = require('./api/routes/playerRoutes');
+playerRoutes(app);
+
+var locationRoutes = require('./api/routes/locationRoutes');
+locationRoutes(app);
 
 var port = process.env.PORT || 3000;
 

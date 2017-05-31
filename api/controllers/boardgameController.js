@@ -79,104 +79,103 @@ exports.search = function(req, res) {
     .get(`${searchUrl}?search=${req.query.search}`)
     .on('response', function(response) {
       console.log(response.statusCode) // 200
-      var xml = '' ;
+      var xml = '';
       response.on('data', (chunk) => {
         xml += chunk;
       });
       response.on('end', () => {
-        xml2js.parseString(xml, function (err, result) {
-            console.log("parsing success");
+        xml2js.parseString(xml, function(err, result) {
+          console.log("parsing success");
 
-            var data = result.boardgames.boardgame ;
-            var boardgames = [] ;
-            for (var i = 0; i < data.length; i++) {
-              var boardgame = {
-                objectid: data[i]["$"].objectid,
-                name: data[i].name[0]['_'],
+          var data = result.boardgames.boardgame;
+          var boardgames = [];
+          for (var i = 0; i < data.length; i++) {
+            var boardgame = {
+              objectid: data[i]["$"].objectid,
+              name: data[i].name[0]['_'],
               //  year_published: data[i].yearpublished[0]
-              };
-              if (data[i].hasOwnProperty('yearpublished') && data[i].yearpublished.length !== 0) {
-                boardgame.year_published = data[i].yearpublished[0];
-              }
-              boardgames.push(boardgame);
+            };
+            if (data[i].hasOwnProperty('yearpublished') && data[i].yearpublished.length !== 0) {
+              boardgame.year_published = data[i].yearpublished[0];
             }
+            boardgames.push(boardgame);
+          }
 
-            res.json(boardgames);
-          })
+          res.json(boardgames);
         })
+      })
     });
 }
 
 
 
 exports.search_by_id = function(req, res) {
+  Boardgame.findOne({
+    objectid: req.params.id
+  }, function(err, result) {
 
-  var boardgameUrl = 'https://www.boardgamegeek.com/xmlapi/boardgame';
-  console.log('proxy boargame :' + `${boardgameUrl}/${req.params.id}`);
-
-  request
-    .get(`${boardgameUrl}/${req.params.id}`)
-    .on('response', function(response) {
-      console.log(response.statusCode) // 200
-      var xml = '' ;
-      response.on('data', (chunk) => {
-        xml += chunk;
+    if (err) {
+      // TODO erreur
+      res.json({
+        'message': 'erreur fatale'
       });
-      response.on('end', () => {
-        xml2js.parseString(xml, function (err, result) {
-          console.log("parsing success");
 
-          var data = result.boardgames.boardgame[0];
-          var objectid = data["$"].objectid ;
-
-          Boardgame.findOne({
-            objectid: objectid
-          }, function(err, result) {
-            // TODO erreur
-            if (err) {
-              console.log("erreur");
-              res.json({'message': 'erreur fatale'}) ;
-            }
-
-            // TODO existe pas
-            if (!result) {
-              var boardgame = {
-                objectid: data["$"].objectid,
-                year_published: data.yearpublished[0],
-                min_players: data.minplayers[0],
-                max_players: data.maxplayers[0],
-                playing_time: data.playingtime[0],
-                min_play_time: data.minplaytime[0],
-                max_play_time: data.maxplaytime[0],
-                age: data.age[0],
-                name: data.name[0]["_"],
-                description: data.description[0],
-                thumbnail: data.thumbnail[0],
-                image: data.image[0],
-              } ;
-              for (var i = 0; i < data.name.length; i++) {
-                if(data.name[i]["$"]["primary"]) {
-                  boardgame.name = data.name[i]["_"];
-                }
-              }result
-
-              var new_boargame = new Boardgame(boardgame);
-
-              console.log(new_boargame);
-
+    } else if (!result) {
+      // TODO existe pas
+      var boardgameUrl = 'https://www.boardgamegeek.com/xmlapi/boardgame';
+      console.log('proxy boardgame :' + `${boardgameUrl}/${req.params.id}`);
+      request
+        .get(`${boardgameUrl}/${req.params.id}`)
+        .on('response', function(response) {
+          console.log(response.statusCode) // 200
+          var xml = '';
+          response.on('data', (chunk) => {
+            xml += chunk;
+          });
+          response.on('end', () => {
+            xml2js.parseString(xml, function(err, jsondata) {
+              console.log("parsing success");
+              var new_boargame = new Boardgame(parseBoardgame(jsondata));
               new_boargame.save(function(err, boardgame) {
                 console.log("create new");
                 if (err)
-                  res.json({'message': 'erreur fatale'}) ;
+                  res.json({
+                    'message': 'erreur fatale'
+                  });
                 res.json(boardgame);
               });
-            }
-
-            // TODO existe
-            console.log("already exist");
-            res.json(result);
+            });
           });
         });
-      });
-    });
+
+    } else {
+      // TODO existe
+      console.log("already exist");
+      res.json(result);
+    }
+  });
+}
+
+function parseBoardgame(jsondata) {
+  var _bg = jsondata.boardgames.boardgame[0];
+  var boardgame = {
+    objectid: _bg["$"].objectid,
+    year_published: _bg.yearpublished[0],
+    min_players: _bg.minplayers[0],
+    max_players: _bg.maxplayers[0],
+    playing_time: _bg.playingtime[0],
+    min_play_time: _bg.minplaytime[0],
+    max_play_time: _bg.maxplaytime[0],
+    age: _bg.age[0],
+    name: _bg.name[0]["_"],
+    description: _bg.description[0],
+    thumbnail: _bg.thumbnail[0],
+    image: _bg.image[0],
+  };
+  for (var i = 0; i < _bg.name.length; i++) {
+    if (_bg.name[i]["$"]["primary"]) {
+      boardgame.name = _bg.name[i]["_"];
+    }
+  }
+  return boardgame;
 }
