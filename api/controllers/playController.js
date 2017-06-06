@@ -86,6 +86,15 @@ exports.delete = function(req, res) {
 };
 
 
+// TODO remove all script
+// Play.remove({}, function(err, play) {
+//   if (err)
+//     res.send(err);
+//   res.json({
+//     message: 'Plays successfully deleted'
+//   });
+// });
+
 exports.search = function(req, res) {
 
   // TODO example url
@@ -144,7 +153,6 @@ exports.search = function(req, res) {
           })
         })
     });
-
 }
 
 exports.search_by_id = function(req, res) {
