@@ -2,43 +2,40 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-// var locationSchema = new Schema({
-//   name: {
-//     type: String
-//   }
-// });
-//
-// var playerSchema = new Schema({
-//   player_name: {
-//     type: String
-//   }
-// });
-
 var PlaySchema = new Schema({
-  play_id: {
+  xmlapi_id: {
     type: Number
   },
   date: {
     type: String
   },
-  location: {
+  place_name: {
     type: String
   },
-  boardgame_id: {
+  boardgame_xmlapi_id: {
     type: Number
   },
   boardgame_name: {
     type: String
   },
-  players: [{
-    name: {
+  playing_time: {
+    type: Number
+  },
+  incomplete: {
+    type: Boolean
+  },
+  scores: [{
+    player_name: {
       type: String
     },
     score: {
       type: Number
     },
     win: {
-      type: Number
+      type: Boolean
+    },
+    new: {
+      type: Boolean
     }
   }]
 });

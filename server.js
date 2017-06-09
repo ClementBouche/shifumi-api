@@ -2,10 +2,11 @@ var express = require('express');
 var cors = require('cors');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
+
 var Boardgame = require('./api/models/boardgameModel');
 var Play = require('./api/models/playModel');
 var Player = require('./api/models/playerModel');
-var Location_ = require('./api/models/locationModel');
+var Place = require('./api/models/placeModel');
 
 var app = express();
 app.use(cors());
@@ -24,8 +25,11 @@ playRoutes(app);
 var playerRoutes = require('./api/routes/playerRoutes');
 playerRoutes(app);
 
-var locationRoutes = require('./api/routes/locationRoutes');
-locationRoutes(app);
+var placeRoutes = require('./api/routes/placeRoutes');
+placeRoutes(app);
+
+var searchRoutes = require('./api/routes/searchRoutes');
+searchRoutes(app);
 
 var port = process.env.PORT || 3000;
 

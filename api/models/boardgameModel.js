@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var BoardgameSchema = new Schema({
-  objectid: {
+  xmlapi_id: {
     type: Number
   },
   year_published: {
@@ -39,21 +39,6 @@ var BoardgameSchema = new Schema({
   image: {
     type: String
   }
-  // name: {
-  //   type: String,
-  //   Required: 'Kindly enter the name of the game'
-  // },
-  // created_date: {
-  //   type: Date,
-  //   default: Date.now
-  // },
-  // status: {
-  //   type: [{
-  //     type: String,
-  //     enum: ['pending', 'ongoing', 'completed']
-  //   }],
-  //   default: ['pending']
-  // }
 });
 
 module.exports = mongoose.model('Boardgames', BoardgameSchema);

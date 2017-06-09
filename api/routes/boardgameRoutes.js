@@ -11,9 +11,4 @@ module.exports = function(app) {
     .put(boardgame.update)
     .delete(boardgame.delete);
 
-  app.route('/search/boardgame')
-    .get(boardgame.search);
-
-  app.route('/search/boardgame/:id')
-    .get(boardgame.search_by_id);
 };

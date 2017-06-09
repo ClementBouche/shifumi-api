@@ -10,10 +10,4 @@ module.exports = function(app) {
     .get(play.read)
     .put(play.update)
     .delete(play.delete);
-
-  app.route('/search/play')
-    .get(play.search);
-
-  app.route('/search/play/:id')
-    .get(play.search_by_id);
 };
