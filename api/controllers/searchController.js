@@ -64,7 +64,7 @@ function getXMLBoardgameById(req, res) {
           new_boargame.save(function(err, boardgame) {
             if (err) {
               res.json({
-                message: 'Error'
+                message: err
               });
             } else {
               res.json(boardgame);

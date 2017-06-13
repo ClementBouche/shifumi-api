@@ -31,6 +31,12 @@ exports.parseBoardgame = function(jsondata) {
     description: data.description[0],
     thumbnail: data.thumbnail[0],
     image: data.image[0],
+    subdomain: data.boardgamesubdomain[0]["_"],
+    thematics: parseThematics(data.boardgamecategory),
+    mechanics: parseMechanics(data.boardgamemechanic),
+    artists: parseArtists(data.boardgameartist),
+    designers: parseDesigners(data.boardgamedesigner),
+    suggested_players: parseSuggestedPlayers(data.poll[0])
   };
   for (var i = 0; i < data.name.length; i++) {
     if (data.name[i]["$"]["primary"]) {
@@ -38,6 +44,58 @@ exports.parseBoardgame = function(jsondata) {
     }
   }
   return boardgame;
+}
+
+var parseSuggestedPlayers = function(jsondata) {
+  var poll = [];
+  for (var i = 0; i < jsondata.results.length; i++) {
+    poll.push({
+      player_count: jsondata.results[i]["$"].numplayers,
+      best: jsondata.results[i]["result"][0]["$"].numvotes,
+      recommanded: jsondata.results[i]["result"][1]["$"].numvotes,
+      not_recommanded: jsondata.results[i]["result"][2]["$"].numvotes
+    });
+  }
+  return {
+    votes: jsondata["$"].totalVotes,
+    poll: poll
+  };
+}
+
+var parseDesigners = function(jsondata) {
+  var designers = [];
+  for (var i = 0; i < jsondata.length; i++) {
+    designers.push({
+      xmlapi_id: jsondata[i]["$"].objectid,
+      name: jsondata[i]["_"]
+    });
+  }
+  return designers;
+}
+var parseArtists = function(jsondata) {
+  var artists = [];
+  for (var i = 0; i < jsondata.length; i++) {
+    artists.push({
+      xmlapi_id: jsondata[i]["$"].objectid,
+      name: jsondata[i]["_"]
+    });
+  }
+  return artists;
+}
+
+var parseThematics = function(jsondata) {
+  var thematics = [];
+  for (var i = 0; i < jsondata.length; i++) {
+    thematics.push(jsondata[i]["_"]);
+  }
+  return thematics;
+}
+var parseMechanics = function(jsondata) {
+  var mechanics = [];
+  for (var i = 0; i < jsondata.length; i++) {
+    mechanics.push(jsondata[i]["_"]);
+  }
+  return mechanics;
 }
 
 exports.parsePlays = function(jsondata) {
