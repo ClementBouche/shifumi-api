@@ -13,7 +13,4 @@ module.exports = function(app) {
 
   app.route('/search/play/:id')
     .get(search.play_by_id);
-
-  app.route('/vaccum')
-    .get(search.vaccum);
 };

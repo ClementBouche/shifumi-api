@@ -158,29 +158,6 @@ function findOrSavePlayer(playerName) {
 
 exports.play_by_id = function(req, res) {
   res.json({
-    message: 'success'
+    message: 'play by id success'
   });
 };
-
-
-exports.vaccum = function(req, res) {
-  Boardgame.remove({}, function(err, play) {
-    if (err)
-      res.send(err);
-  });
-  Play.remove({}, function(err, play) {
-    if (err)
-      res.send(err);
-  });
-  Player.remove({}, function(err, play) {
-    if (err)
-      res.send(err);
-  });
-  Place.remove({}, function(err, play) {
-    if (err)
-      res.send(err);
-  });
-  res.json({
-    message: "Base de données vide"
-  });
-}

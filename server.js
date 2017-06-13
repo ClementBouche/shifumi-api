@@ -31,6 +31,12 @@ placeRoutes(app);
 var searchRoutes = require('./api/routes/searchRoutes');
 searchRoutes(app);
 
+var updateRoutes = require('./api/routes/updateRoutes');
+updateRoutes(app);
+
+var systemRoutes = require('./api/routes/systemRoutes');
+systemRoutes(app);
+
 var port = process.env.PORT || 3000;
 
 app.listen(port);
