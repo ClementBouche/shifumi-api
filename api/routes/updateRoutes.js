@@ -7,4 +7,7 @@ module.exports = function(app) {
 
   app.route('/update/player')
     .get(search.update_player);
+
+  app.route('/update/boardgame')
+    .get(search.update_boardgame);
 };

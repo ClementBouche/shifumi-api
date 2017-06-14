@@ -107,3 +107,47 @@ exports.statsByPlayer = function(plays, boardgames, playerName) {
     win_ratio: playsCount !== 0 ? Math.trunc(wins/playsCount*100) : 0
   };
 };
+
+
+exports.statsByBoardgame = function(plays, boardgame) {
+  var time = 0,
+    playsCount = 0,
+    incompletes = 0,
+    wins = 0,
+    players = [],
+    places = [];
+  for (var i = 0; i < plays.length; i++) {
+    var play = plays[i];
+    if (play.boardgame_xmlapi_id !== boardgame.xmlapi_id) {
+      continue;
+    }
+    // plays
+    playsCount++;
+    if (play.incomplete) {
+      incompletes++;
+    }
+    // time
+    if (play.playing_time !== 0) {
+      time += play.playing_time;
+    } else {
+      time += boardgame.playing_time;
+    }
+    // places
+    var place = play.place_name;
+    if (places.indexOf(place) === -1)
+      places.push(place);
+    // players
+    var names = play.scores.map((score) => score.player_name);
+    for (var j = 0; j < names.length; j++) {
+      if (names[j] !== playerName && players.indexOf(names[j]) === -1)
+        players.push(names[j]);
+    }
+  }
+  return {
+    plays_count: playsCount,
+    plays_incomplete_count: incompletes,
+    places_count: places.length,
+    players_count: players.length,
+    play_time: time
+  };
+};

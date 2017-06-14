@@ -41,7 +41,13 @@ var BoardgameSchema = new Schema({
       recommanded: { type: Number },
       not_recommanded: { type: Number }
     }]
-  }
+  },
+  // global statistic data
+  plays_count: { type: Number, default: 0 },
+  plays_incomplete_count: { type: Number, default: 0 },
+  places_count: { type: Number, default: 0 },
+  players_count: { type: Number, default: 0 },
+  play_time: { type: Number, default: 0 }
 });
 
 module.exports = mongoose.model('Boardgames', BoardgameSchema);

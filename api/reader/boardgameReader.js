@@ -31,7 +31,7 @@ exports.parseBoardgame = function(jsondata) {
     description: data.description[0],
     thumbnail: data.thumbnail[0],
     image: data.image[0],
-    subdomain: data.boardgamesubdomain[0]["_"],
+    subdomain: parseSubdomain(data.boardgamesubdomain),
     thematics: parseThematics(data.boardgamecategory),
     mechanics: parseMechanics(data.boardgamemechanic),
     artists: parseArtists(data.boardgameartist),
@@ -44,6 +44,16 @@ exports.parseBoardgame = function(jsondata) {
     }
   }
   return boardgame;
+}
+
+var parseSubdomain = function(jsondata) {
+  if( typeof jsondata === 'undefined'
+  || typeof jsondata[0] === 'undefined'
+  || typeof jsondata[0]["_"] === 'undefined'
+  ) {
+    return "" ;
+  }
+  return jsondata[0]["_"];
 }
 
 var parseSuggestedPlayers = function(jsondata) {
@@ -73,6 +83,11 @@ var parseDesigners = function(jsondata) {
   return designers;
 }
 var parseArtists = function(jsondata) {
+  if( typeof jsondata === 'undefined'
+  || ! jsondata.hasOwnProperty('length')
+  ) {
+    return [] ;
+  }
   var artists = [];
   for (var i = 0; i < jsondata.length; i++) {
     artists.push({
