@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "db": "node init-db.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,7 @@
     "express": "^4.15.3",
     "mongoose": "^4.10.2",
     "request": "^2.81.0",
+    "request-promise": "^4.2.1",
     "xml2js": "^0.4.17"
   }
 }
