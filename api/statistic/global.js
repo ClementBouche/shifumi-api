@@ -139,7 +139,7 @@ exports.statsByBoardgame = function(plays, boardgame) {
     // players
     var names = play.scores.map((score) => score.player_name);
     for (var j = 0; j < names.length; j++) {
-      if (names[j] !== playerName && players.indexOf(names[j]) === -1)
+      if (players.indexOf(names[j]) === -1)
         players.push(names[j]);
     }
   }
