@@ -19,10 +19,6 @@ var loadCollection = function(playsCount) {
     });
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(() => { resolve }, ms));
-}
-
 var loadGames = function(plays) {
   var boardgames = new Set(
     plays.map((play) => play.boardgame_xmlapi_id)
