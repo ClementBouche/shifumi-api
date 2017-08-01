@@ -7,11 +7,11 @@ var Play = mongoose.model('Plays');
 exports.list = function(req, res) {
   var size = 10 ;
   if (req.query.size) {
-    size = req.query.size;
+    size = parseInt(req.query.size);
   }
   var page = 0 ;
   if (req.query.page) {
-    page = req.query.page - 1;
+    page = parseInt(req.query.page) - 1;
   }
   var skip = page * size ;
 
@@ -68,7 +68,7 @@ exports.delete = function(req, res) {
 
 Play.getPaginatedPlays = function(skip, limit, callback) {
   Play.find(null, null, {
-      sort: { date: 1 },
+      sort: { date: -1 },
       skip: skip,
       limit: limit
     },
