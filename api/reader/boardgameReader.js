@@ -73,6 +73,11 @@ var parseSuggestedPlayers = function(jsondata) {
 }
 
 var parseDesigners = function(jsondata) {
+  if( typeof jsondata === 'undefined'
+  || ! jsondata.hasOwnProperty('length')
+  ) {
+    return [] ;
+  }
   var designers = [];
   for (var i = 0; i < jsondata.length; i++) {
     designers.push({
@@ -99,6 +104,11 @@ var parseArtists = function(jsondata) {
 }
 
 var parseThematics = function(jsondata) {
+  if( typeof jsondata === 'undefined'
+  || ! jsondata.hasOwnProperty('length')
+  ) {
+    return [] ;
+  }
   var thematics = [];
   for (var i = 0; i < jsondata.length; i++) {
     thematics.push(jsondata[i]["_"]);
@@ -106,6 +116,11 @@ var parseThematics = function(jsondata) {
   return thematics;
 }
 var parseMechanics = function(jsondata) {
+  if( typeof jsondata === 'undefined'
+  || ! jsondata.hasOwnProperty('length')
+  ) {
+    return [] ;
+  }
   var mechanics = [];
   for (var i = 0; i < jsondata.length; i++) {
     mechanics.push(jsondata[i]["_"]);
