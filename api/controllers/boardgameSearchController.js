@@ -18,10 +18,10 @@ exports.create = function(req, res) {
   }
   // 2 // players
   if (req.body.filters.min_players) {
-    filters.min_players = {$lte: req.body.filters.min_players};
+    filters.min_players = {$gte: req.body.filters.min_players};
   }
   if (req.body.filters.max_players) {
-    filters.max_players = {$gte: req.body.filters.max_players};
+    filters.max_players = {$lte: req.body.filters.max_players};
   }
   // 3 // time
   if (req.body.filters.min_time || req.body.filters.max_time) {
