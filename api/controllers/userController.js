@@ -7,13 +7,14 @@ var User = mongoose.model('Users');
 
 exports.setup = function(req, res) {
   // create a sample user
-  var nick = new User({ 
-    name: 'Nick Cerminara', 
-    password: 'password',
+  var new_user = new User({ 
+    username: 'cbouche', 
+    name: 'Bouché',
+    password: 'cbouche',
     admin: true 
   });
   // save the sample user
-  nick.save(function(err) {
+  new_user.save(function(err) {
     if (err) throw err;
     console.log('User saved successfully');
     res.json({ success: true });
@@ -61,7 +62,7 @@ exports.delete = function(req, res) {
 exports.authenticate = function(req, res) {
   // find the user
   User.findOne({
-    name: req.body.name
+    username: req.body.username
   }, function(err, user) {
 
     if (err) throw err;
