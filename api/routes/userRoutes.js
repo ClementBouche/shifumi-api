@@ -9,7 +9,7 @@ module.exports = function(app) {
     .post(user.authenticate);
 
   // route middleware to verify a token
-  app.use(tokenService.checkAuthentication);
+  // app.use(tokenService.checkAuthentication);
 
   app.route('/user/setup')
     .get(user.setup);

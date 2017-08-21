@@ -21,7 +21,7 @@ module.exports = function(app) {
     .get(boardgame.read);
 
   // route middleware to verify a token
-  app.use(tokenService.checkAuthentication);
+  // app.use(tokenService.checkAuthentication);
 
   app.route('/boardgame')
     .post(boardgame.create);
