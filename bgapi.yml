@@ -1,0 +1,107 @@
+swagger: '2.0'
+info:
+    title: "Shifumi API"
+    version: "1.0.0"
+    contact: 
+        name: "Bababouch"
+        email: "cbouche44@gmail.com"
+    description: >
+
+      Cette API s'appuie sur les services [boardgamegeek.com](https://boardgamegeek.com/) et sur une base de données dédiée pour fournir :
+
+        * Des informations sur les jeux de société, fiches de jeux, parties jouées, développeurs, artistes, etc...
+        * Un moteur de recherche de jeux
+        * Des outils de saisie de score
+        * Un espace de sauvegarde pour les utilisateurs inscrits
+
+      # Généralités
+
+      ## Format
+
+      L'API renvoie ses résultats en format JSON/[GeoJSON](http://geojson.org/).
+
+      ## Ressources complémentaires
+
+      Le développeur pourra s'intéresser aux outils suivants :
+
+        * [boardgamegeek-api](https://boardgamegeek.com/xmlapi) : API xml d'accès aux données de la plateforme BoardgameGeek.
+        * [boardgamestats](http://eerko.nl/software/board-game-stats/) : Application iOS pour suivre vos parties et vos scores.
+
+#--- FIN DE DESCRIPTION ------
+
+
+#host: localhost
+#host: 51.15.12.84
+#host: api.shifumiplay.fr
+basePath: /
+# array of all schemes that your API supports
+schemes:
+ - http
+produces:
+  - application/json
+tags: 
+  - name: "boardgame"
+    description: "Tous les jeux de société"
+  - name: "play"
+    description: "Toutes les parties"
+paths:
+    # -- Jeux
+    /boardgame:
+        get:
+            summary: "Liste des jeux"
+            description: |
+                Renvoie une liste de jeux.
+                Les paramètres sont le nombre d'élément 'size', la page 'page', l'ordre d'affichage 'sort' et un éventuel filtre par 'nom'.
+            parameters:
+              - name: size
+                in: query
+                description: "Nombre d'éléments à afficher, par défault 100"
+                required: false
+                type: integer
+              - name: page
+                in: query
+                description: "Page à afficher"
+                required: false
+                type: integer
+              - name: sort
+                in: query
+                description: "Ordre d'affichage (ex: 'name')"
+                required: false
+                type: string
+              - name: name
+                in: query
+                description: "Filtre sur les noms (ex: '7 Wonders')"
+                required: false
+                type: string
+            tags:
+              - boardgame
+            responses:
+                200:
+                  description: Liste de features
+                  schema:
+                      $ref: '#/definitions/Boardgames'
+                default:
+                  description: Erreur non répertoriée
+                  schema:
+                    $ref: '#/definitions/Error'
+
+definitions:
+    # -- collection de jeux
+    Boardgames:
+        type: array
+        description: "Liste paginé de jeux"
+        items:
+            $ref: '#/definitions/Boardgame'
+    # -- jeux
+    Boardgame:
+        type: object
+        description: "Boardgame"
+        properties:
+            name:
+                type: string
+    # -- Erreur non répertoriée
+    Error:
+        type: object
+        properties:
+            status:
+                type: string
