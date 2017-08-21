@@ -5,7 +5,19 @@ var mongoose = require('mongoose');
 var Boardgame = mongoose.model('Boardgames');
 
 exports.list = function(req, res) {
-  Boardgame.find({}, function(err, boardgame) {
+  Boardgame.find({}, {
+    name: 1,
+    min_players: 1,
+    max_players: 1,
+    playing_time: 1,
+    mechanics: 1,
+    thematics: 1,
+    // pour affichage
+    year_published:1,
+    thumbnail:1,
+    plays_count:1,
+    play_time:1
+  }, function(err, boardgame) {
     if (err)
       res.send(err);
     res.json(boardgame);

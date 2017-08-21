@@ -7,7 +7,7 @@ var Boardgame = mongoose.model('Boardgames');
 exports.create = function(req, res) {
   var size, page, name, filters = {};
   // pages
-  req.body.size ? size = parseInt(req.body.size) : size = 10 ;
+  req.body.size ? size = parseInt(req.body.size) : size = 100 ;
   req.body.page ? page = parseInt(req.body.page) - 1 : page = 1 ;
   var skip = page * size ;
 

@@ -1,4 +1,7 @@
 'use strict';
+
+var tokenService = require('../jwt/tokenService');
+
 module.exports = function(app) {
   var boardgame = require('../controllers/boardgameController');
   var boardgameSearch = require('../controllers/boardgameSearchController');
@@ -6,8 +9,7 @@ module.exports = function(app) {
   var boardgameMechanic = require('../controllers/boardgameMechanicController');
 
   app.route('/boardgame')
-    .get(boardgame.list)
-    .post(boardgame.create);
+    .get(boardgame.list);
 
   app.route('/boardgame/mechanic')
     .get(boardgameMechanic.list);
@@ -15,11 +17,19 @@ module.exports = function(app) {
   app.route('/boardgame/thematic')
     .get(boardgameThematic.list);
 
+  app.route('/boardgame/:boardgameid')
+    .get(boardgame.read);
+
+  // route middleware to verify a token
+  app.use(tokenService.checkAuthentication);
+
+  app.route('/boardgame')
+    .post(boardgame.create);
+
   app.route('/boardgame/search')
     .post(boardgameSearch.create);
 
   app.route('/boardgame/:boardgameid')
-    .get(boardgame.read)
     .put(boardgame.update)
     .delete(boardgame.delete);
 
