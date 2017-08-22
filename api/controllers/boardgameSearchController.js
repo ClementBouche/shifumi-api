@@ -61,11 +61,12 @@ Boardgame.getPaginated = function(limit, skip, filters, callback) {
       year_published:1,
       thumbnail:1,
       plays_count:1,
-      play_time:1
+      play_time:1,
+      rank: 1
     },
     {
-      // sort: { rank: 1 },
-      sort: { name: 1 },
+      sort: { rank: 1 },
+      // sort: { name: 1 },
       skip: skip,
       limit: limit
     },

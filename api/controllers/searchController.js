@@ -15,20 +15,26 @@ var Place = mongoose.model('Places');
 exports.boardgames = function(req, res) {
   var searchUrl = 'https://www.boardgamegeek.com/xmlapi/search';
   var xmlResponse = '';
-  request
-    .get(`${searchUrl}?search=${req.query.name}`)
-    .on('data', function(chunk) {
-      xmlResponse += chunk;
-    })
-    .on('end', function(response) {
-      xml2js.parseString(xmlResponse, function(err, result) {
-        if (req.query.original) {
-          res.json(result);
-        } else {
-          res.json(boardgameReader.parseBoardgames(result));
-        }
+  if(!req.query.name) {
+    res.json({
+      message: 'Erreur : Ajouter un nom en parametre'
+    }) ;
+  } else {
+    request
+      .get(`${searchUrl}?search=${req.query.name}`)
+      .on('data', function(chunk) {
+        xmlResponse += chunk;
+      })
+      .on('end', function(response) {
+        xml2js.parseString(xmlResponse, function(err, result) {
+          if (req.query.original) {
+            res.json(result);
+          } else {
+            res.json(boardgameReader.parseBoardgames(result));
+          }
+        });
       });
-    });
+  }
 };
 
 
@@ -47,11 +53,12 @@ exports.boardgame_by_id = function(req, res) {
     }
   });
 };
+
 function getXMLBoardgameById(req, res) {
   var boardgameUrl = 'https://www.boardgamegeek.com/xmlapi/boardgame';
   var xmlResponse = '';
   request
-    .get(`${boardgameUrl}/${req.params.id}`)
+    .get(`${boardgameUrl}/${req.params.id}?stats=1`)
     .on('data', function(chunk) {
       xmlResponse += chunk;
     })

@@ -7,10 +7,11 @@ var Boardgame = mongoose.model('Boardgames');
 exports.list = function(req, res) {
   var filters = {},
       options = {
-        sort: { name: 1 }
+        sort: { rank: 1 }
       };
   if(req.query.name) {
     filters.name = new RegExp(req.query.name.trim(), 'i');
+    options.sort = { name: 1 };
   }
   if(req.query.sort) {
     options.sort = {};
@@ -27,7 +28,8 @@ exports.list = function(req, res) {
     year_published:1,
     thumbnail:1,
     plays_count:1,
-    play_time:1
+    play_time:1,
+    rank: 1
   };
   Boardgame.find(filters, projection, options, function(err, boardgame) {
     if (err)

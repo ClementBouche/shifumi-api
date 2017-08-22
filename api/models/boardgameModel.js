@@ -47,7 +47,22 @@ var BoardgameSchema = new Schema({
   plays_incomplete_count: { type: Number, default: 0 },
   places_count: { type: Number, default: 0 },
   players_count: { type: Number, default: 0 },
-  play_time: { type: Number, default: 0 }
+  play_time: { type: Number, default: 0 },
+  // ratings
+  votes_note: Number,
+  average_note: Number,
+  bayes_note: Number,
+  rank: Number,
+  votes_complexity: Number,
+  complexity: Number,
+  other_ranks: [{
+    type: { type: String },
+    id: Number,
+    name: String,
+    description: String,
+    rank: Number,
+    bayes_note: Number
+  }]
 });
 
 module.exports = mongoose.model('Boardgames', BoardgameSchema);

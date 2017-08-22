@@ -36,8 +36,9 @@ exports.parseBoardgame = function(jsondata) {
     mechanics: parseMechanics(data.boardgamemechanic),
     artists: parseArtists(data.boardgameartist),
     designers: parseDesigners(data.boardgamedesigner),
-    suggested_players: parseSuggestedPlayers(data.poll[0])
+    suggested_players: parseSuggestedPlayers(data.poll[0]),
   };
+  boardgame = parseStatistics(boardgame, data.statistics[0]);
   for (var i = 0; i < data.name.length; i++) {
     if (data.name[i]["$"]["primary"]) {
       boardgame.name = data.name[i]["_"];
@@ -163,4 +164,69 @@ var parseScores = function(jsondata) {
     scores.push(score);
   }
   return scores;
+}
+
+
+
+
+var parseStatistics = function(boardgame, jsondata) {
+  if( typeof jsondata === 'undefined'
+    || ! jsondata.hasOwnProperty('ratings')
+    || ! jsondata['ratings'].hasOwnProperty('length')
+  ) {
+    return boardgame ;
+  }
+  var data = jsondata['ratings'][0];
+  boardgame.votes_note = data.usersrated[0],
+  boardgame.average_note = data.average[0],
+  boardgame.bayes_note = data.bayesaverage[0],
+  boardgame.votes_complexity = data.numweights[0],
+  boardgame.complexity = data.averageweight[0],
+  boardgame.rank = parseRank(data.ranks),
+  boardgame.other_ranks = parseOtherRanks(data.ranks)
+  return boardgame;
+}
+
+var parseRank = function(jsondata) {
+  if( typeof jsondata === 'undefined'
+    || ! jsondata.hasOwnProperty('length')
+    || ! jsondata[0].hasOwnProperty('rank')
+    || ! jsondata[0]['rank'].hasOwnProperty('length')
+  ) {
+    return null ;
+  }
+  var data = jsondata[0]['rank'];
+  for (var i = 0; i < data.length; i++) {
+    if(data[i]['$'].id === '1') {
+      return data[i]['$'].value;
+    }
+  }
+  return null;
+}
+
+var parseOtherRanks = function(jsondata) {
+  var ranks = [];
+  if( typeof jsondata === 'undefined'
+    || ! jsondata.hasOwnProperty('length')
+    || ! jsondata[0].hasOwnProperty('rank')
+    || ! jsondata[0]['rank'].hasOwnProperty('length')
+  ) {
+    return ranks ;
+  }
+  var data = jsondata[0]['rank'];
+  for (var i = 0; i < data.length; i++) {
+    if(data[i]['$'].id === '1') {
+      continue;
+    }
+    var rank = {
+      type: data[i]['$'].type,
+      id: data[i]['$'].id,
+      name: data[i]['$'].name,
+      description: data[i]['$'].friendlyname,
+      rank: data[i]['$'].value,
+      bayes_note: data[i]['$'].bayesaverage
+    }
+    ranks.push(rank);
+  }
+  return ranks;
 }
