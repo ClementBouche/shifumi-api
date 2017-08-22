@@ -25,6 +25,7 @@ exports.list = function(req, res) {
     mechanics: 1,
     thematics: 1,
     // pour affichage
+    xmlapi_id: 1,
     year_published:1,
     thumbnail:1,
     plays_count:1,
