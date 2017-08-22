@@ -9,8 +9,6 @@ exports.checkUser = function(req, res, next) {
     && req.headers.authorization.indexOf('Bearer') !== -1
   ) {
     var token = req.headers.authorization.split(' ')[1];
-    console.log(req.headers.authorization);
-    console.log(token);
     if(token) {
       // verifies secret and checks exp
       jwt.verify(token, config.secret, function(err, decoded) {      
@@ -18,12 +16,54 @@ exports.checkUser = function(req, res, next) {
           return res.json({ success: false, message: 'Failed to authenticate token.' });    
         } else {
           // if everything is good, save to request for use in other routes
-          req.decoded = decoded;    
+          req.decoded = decoded;
           next();
         }
       });
     } else {
       // if there is no token
+      // return an error
+      return res.status(403).send({ 
+          success: false, 
+          message: 'Unreadeable token.' 
+      });
+    }
+  } else {
+    // if there is no token
+    // return an error
+    return res.status(403).send({ 
+        success: false, 
+        message: 'No token provided.' 
+    });
+  }
+}
+
+exports.checkAdmin = function(req, res, next) {
+  if(req.headers 
+    && req.headers.authorization 
+    && req.headers.authorization.indexOf('Bearer') !== -1
+  ) {
+    var token = req.headers.authorization.split(' ')[1];
+    if(token) {
+      // verifies secret and checks exp
+      jwt.verify(token, config.secret, function(err, decoded) {      
+        if (err) {
+          return res.json({ success: false, message: 'Failed to authenticate token.' });    
+        } else {
+          // if everything is good, save to request for use in other routes
+          if(decoded.admin) {
+            req.decoded = decoded;
+            next();
+          } else {
+            // return an error
+            return res.status(403).send({ 
+                success: false, 
+                message: 'You are not admin.' 
+            });
+          }
+        }
+      });
+    } else {
       // return an error
       return res.status(403).send({ 
           success: false, 

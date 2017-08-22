@@ -29,6 +29,15 @@ exports.list = function(req, res) {
   });
 }
 
+exports.create = function(req, res) {
+  var new_user = new User(req.body);
+  new_user.save(function(err, user) {
+    if (err)
+      res.send(err);
+    res.json(user);
+  });
+}
+
 exports.read = function(req, res) {
   User.findById(req.params.userid, function(err, user) {
     if (err)
@@ -77,9 +86,16 @@ exports.authenticate = function(req, res) {
       } else {
         // if user is found and password is right
         // create a token
-        var token = jwt.sign(user, global.superSecret, {
-          expiresIn: "24h" // expires in 24 hours
-        });
+        var token = jwt.sign({
+            id: user.id,
+            username: user.username,
+            admin: user.admin
+          },
+          global.superSecret,
+          {
+            expiresIn: "24h" // expires in 24 hours
+          }
+        );
         // return the information including token as JSON
         res.json({
           success: true,

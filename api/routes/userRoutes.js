@@ -12,7 +12,8 @@ module.exports = function(app) {
     .get(tokenService.checkUser, user.setup);
 
   app.route('/user')
-    .get(tokenService.checkUser, user.list);
+    .get(tokenService.checkAdmin, user.list)
+    .post(tokenService.checkAdmin, user.create);
 
   app.route('/user/:userid')
     .get(tokenService.checkUser, user.read)
