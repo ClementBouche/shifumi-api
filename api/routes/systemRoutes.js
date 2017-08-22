@@ -6,5 +6,5 @@ module.exports = function(app) {
   var system = require('../controllers/systemController');
 
   app.route('/vaccum')
-    .get(tokenService.checkUser, system.vaccum);
+    .get(tokenService.checkAdmin, system.vaccum);
 };
