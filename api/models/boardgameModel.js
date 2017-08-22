@@ -8,7 +8,7 @@ var BoardgameSchema = new Schema({
   // metadata
   name: { type: String },
   description: { type: String },
-  year_published: { type: String },
+  year_published: { type: Number },
   // images
   thumbnail: { type: String },
   image: { type: String },

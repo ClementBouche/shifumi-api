@@ -5,7 +5,18 @@ var mongoose = require('mongoose');
 var Boardgame = mongoose.model('Boardgames');
 
 exports.list = function(req, res) {
-  Boardgame.find({}, {
+  var filters = {},
+      options = {
+        sort: { name: 1 }
+      };
+  if(req.query.name) {
+    filters.name = new RegExp(req.query.name.trim(), 'i');
+  }
+  if(req.query.sort) {
+    options.sort = {};
+    options.sort[req.query.sort] = 1;
+  }
+  var projection = {
     name: 1,
     min_players: 1,
     max_players: 1,
@@ -17,7 +28,8 @@ exports.list = function(req, res) {
     thumbnail:1,
     plays_count:1,
     play_time:1
-  }, function(err, boardgame) {
+  };
+  Boardgame.find(filters, projection, options, function(err, boardgame) {
     if (err)
       res.send(err);
     res.json(boardgame);
