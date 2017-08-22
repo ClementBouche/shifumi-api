@@ -22,6 +22,13 @@ exports.checkUser = function(req, res, next) {
           next();
         }
       });
+    } else {
+      // if there is no token
+      // return an error
+      return res.status(403).send({ 
+          success: false, 
+          message: 'Unreadeable token.' 
+      });
     }
   } else {
     // if there is no token

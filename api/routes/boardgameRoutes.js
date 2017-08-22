@@ -21,16 +21,15 @@ module.exports = function(app) {
     .get(boardgame.read);
 
   // route middleware to verify a token
-  // app.use(tokenService.checkAuthentication);
 
   app.route('/boardgame')
-    .post(boardgame.create);
+    .post(tokenService.checkUser, boardgame.create);
 
   app.route('/boardgame/search')
-    .post(boardgameSearch.create);
+    .post(tokenService.checkUser, boardgameSearch.create);
 
   app.route('/boardgame/:boardgameid')
-    .put(boardgame.update)
-    .delete(boardgame.delete);
+    .put(tokenService.checkUser, boardgame.update)
+    .delete(tokenService.checkUser, boardgame.delete);
 
 };
