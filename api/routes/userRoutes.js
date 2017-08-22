@@ -8,17 +8,14 @@ module.exports = function(app) {
   app.route('/user/authenticate')
     .post(user.authenticate);
 
-  // route middleware to verify a token
-  // app.use(tokenService.checkAuthentication);
-
   app.route('/user/setup')
-    .get(user.setup);
+    .get(tokenService.checkUser, user.setup);
 
   app.route('/user')
-    .get(user.list);
+    .get(tokenService.checkUser, user.list);
 
   app.route('/user/:userid')
-    .get(user.read)
-    .post(user.update)
-    .delete(user.delete);
+    .get(tokenService.checkUser, user.read)
+    .post(tokenService.checkUser, user.update)
+    .delete(tokenService.checkUser, user.delete);
 };

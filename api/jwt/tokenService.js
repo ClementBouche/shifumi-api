@@ -3,11 +3,15 @@
 var config  = require('./../../config'); // get our config file
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
-exports.checkAuthentication = function(req, res, next) {
-    // check header or url parameters or post parameters for token
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    // decode token
-    if (token) {
+exports.checkUser = function(req, res, next) {
+  if(req.headers 
+    && req.headers.authorization 
+    && req.headers.authorization.indexOf('Bearer') !== -1
+  ) {
+    var token = req.headers.authorization.split(' ')[1];
+    console.log(req.headers.authorization);
+    console.log(token);
+    if(token) {
       // verifies secret and checks exp
       jwt.verify(token, config.secret, function(err, decoded) {      
         if (err) {
@@ -18,13 +22,14 @@ exports.checkAuthentication = function(req, res, next) {
           next();
         }
       });
-    } else {
-      // if there is no token
-      // return an error
-      return res.status(403).send({ 
-          success: false, 
-          message: 'No token provided.' 
-      });
     }
+  } else {
+    // if there is no token
+    // return an error
+    return res.status(403).send({ 
+        success: false, 
+        message: 'No token provided.' 
+    });
+  }
 }
 
