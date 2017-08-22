@@ -7,6 +7,7 @@ module.exports = function(app) {
   var boardgameSearch = require('../controllers/boardgameSearchController');
   var boardgameThematic = require('../controllers/boardgameThematicController');
   var boardgameMechanic = require('../controllers/boardgameMechanicController');
+  var boardgameSubdomain = require('../controllers/boardgameSubdomainController');
 
   app.route('/boardgame')
     .get(boardgame.list);
@@ -16,6 +17,9 @@ module.exports = function(app) {
 
   app.route('/boardgame/thematic')
     .get(boardgameThematic.list);
+
+  app.route('/boardgame/subdomain')
+    .get(boardgameSubdomain.list);
 
   app.route('/boardgame/:boardgameid')
     .get(boardgame.read);

@@ -29,7 +29,8 @@ exports.list = function(req, res) {
     thumbnail:1,
     plays_count:1,
     play_time:1,
-    rank: 1
+    rank: 1,
+    subdomain: 1
   };
   Boardgame.find(filters, projection, options, function(err, boardgame) {
     if (err)
