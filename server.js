@@ -22,7 +22,12 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.database);
+mongoose.connect(
+  config.database,
+  {
+    useMongoClient: true
+  }
+);
 
 var swaggerDoc   = YAML.load('bgapi.yml');
 swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
