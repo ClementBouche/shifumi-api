@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config  = require('./../../config'); // get our config file
 
 var User = mongoose.model('Users');
 
@@ -91,7 +92,7 @@ exports.authenticate = function(req, res) {
             username: user.username,
             admin: user.admin
           },
-          global.superSecret,
+          config.secret,
           {
             expiresIn: "24h" // expires in 24 hours
           }

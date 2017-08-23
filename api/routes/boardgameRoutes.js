@@ -8,6 +8,7 @@ module.exports = function(app) {
   var boardgameThematic = require('../controllers/boardgameThematicController');
   var boardgameMechanic = require('../controllers/boardgameMechanicController');
   var boardgameSubdomain = require('../controllers/boardgameSubdomainController');
+  var statistic = require('../controllers/statisticController');
 
   app.route('/boardgame')
     .get(boardgame.list);
@@ -21,11 +22,14 @@ module.exports = function(app) {
   app.route('/boardgame/subdomain')
     .get(boardgameSubdomain.list);
 
-  app.route('/boardgame/:boardgameid')
-    .get(boardgame.read);
-
   app.route('/boardgame/search')
     .post(boardgameSearch.create);
+
+  app.route('/boardgame/statistic')
+    .get(statistic.boardgame);
+
+  app.route('/boardgame/:boardgameid')
+    .get(boardgame.read);
 
   // route middleware to verify a token
 

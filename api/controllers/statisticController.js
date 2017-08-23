@@ -10,7 +10,7 @@ var Player = mongoose.model('Players');
 var Place = mongoose.model('Places');
 
 // update global statistic data  for places
-exports.update_place = function(req, res) {
+exports.place = function(req, res) {
   var getPlays = Play.find({}).exec();
   var getPlaces = Place.find({}).exec();
   var getBoardgames = Boardgame.find({}).exec();
@@ -29,7 +29,7 @@ exports.update_place = function(req, res) {
 };
 
 // update global statistic data for players
-exports.update_player = function(req, res) {
+exports.player = function(req, res) {
   var getPlays = Play.find({}).exec();
   var getPlayers = Player.find({}).exec();
   var getBoardgames = Boardgame.find({}).exec();
@@ -48,7 +48,7 @@ exports.update_player = function(req, res) {
 }
 
 // update global statistic data for players
-exports.update_boardgame = function(req, res) {
+exports.boardgame = function(req, res) {
   var getPlays = Play.find({}).exec();
   var getBoardgames = Boardgame.find({}).exec();
   Promise.all([getPlays, getBoardgames])
