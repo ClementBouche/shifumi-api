@@ -24,13 +24,13 @@ module.exports = function(app) {
   app.route('/boardgame/:boardgameid')
     .get(boardgame.read);
 
+  app.route('/boardgame/search')
+    .post(boardgameSearch.create);
+
   // route middleware to verify a token
 
   app.route('/boardgame')
     .post(tokenService.checkUser, boardgame.create);
-
-  app.route('/boardgame/search')
-    .post(tokenService.checkUser, boardgameSearch.create);
 
   app.route('/boardgame/:boardgameid')
     .put(tokenService.checkUser, boardgame.update)

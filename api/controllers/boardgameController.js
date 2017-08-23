@@ -1,5 +1,5 @@
 'use strict';
-//https://www.boardgamegeek.com/xmlapi2/plays?username=cbouche
+
 var mongoose = require('mongoose');
 
 var Boardgame = mongoose.model('Boardgames');
