@@ -36,7 +36,7 @@ exports.parseBoardgame = function(jsondata) {
     mechanics: parseMechanics(data.boardgamemechanic),
     artists: parseArtists(data.boardgameartist),
     designers: parseDesigners(data.boardgamedesigner),
-    suggested_players: parseSuggestedPlayers(data.poll[0]),
+    suggested_players: parseSuggestedPlayers(data.poll),
   };
   boardgame = parseStatistics(boardgame, data.statistics[0]);
   for (var i = 0; i < data.name.length; i++) {
@@ -58,17 +58,28 @@ var parseSubdomain = function(jsondata) {
 }
 
 var parseSuggestedPlayers = function(jsondata) {
+  if( typeof jsondata === 'undefined'
+  || typeof jsondata[0] === 'undefined'
+  ) {
+    return {} ;
+  }
   var poll = [];
-  for (var i = 0; i < jsondata.results.length; i++) {
-    poll.push({
-      player_count: jsondata.results[i]["$"].numplayers,
-      best: jsondata.results[i]["result"][0]["$"].numvotes,
-      recommanded: jsondata.results[i]["result"][1]["$"].numvotes,
-      not_recommanded: jsondata.results[i]["result"][2]["$"].numvotes
-    });
+  try {
+    for (var i = 0; i < jsondata[0].results.length; i++) {
+      poll.push({
+        player_count: jsondata[0].results[i]["$"].numplayers,
+        best: jsondata[0].results[i]["result"][0]["$"].numvotes,
+        recommanded: jsondata[0].results[i]["result"][1]["$"].numvotes,
+        not_recommanded: jsondata[0].results[i]["result"][2]["$"].numvotes
+      });
+    }
+  } catch(error) {
+    console.error(error);
+    console.log(jsondata);
+    return {};
   }
   return {
-    votes: jsondata["$"].totalVotes,
+    votes: jsondata[0]["$"].totalVotes,
     poll: poll
   };
 }
