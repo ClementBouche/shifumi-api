@@ -29,7 +29,7 @@ mongoose.connect(
   }
 );
 
-var swaggerDoc   = YAML.load('bgapi.yml');
+var swaggerDoc   = YAML.load('./doc/bgapi.yml');
 swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
   // Serve the Swagger documents and Swagger UI
   app.use(middleware.swaggerUi());
@@ -43,20 +43,15 @@ var playerRoutes = require('./api/routes/playerRoutes');
 playerRoutes(app);
 var placeRoutes = require('./api/routes/placeRoutes');
 placeRoutes(app);
-var searchRoutes = require('./api/routes/searchRoutes');
-searchRoutes(app);
-var updateRoutes = require('./api/routes/updateRoutes');
-updateRoutes(app);
-var systemRoutes = require('./api/routes/systemRoutes');
-systemRoutes(app);
-
 var userRoutes = require('./api/routes/userRoutes');
 userRoutes(app);
+var systemRoutes = require('./api/routes/systemRoutes');
+systemRoutes(app);
+var searchRoutes = require('./api/routes/miningRoutes');
+searchRoutes(app);
 
 var port = process.env.PORT || 3000;
 
-app.set('superSecret', config.secret); // secret variable
-global.superSecret = config.secret ; // secret variable
 app.listen(port);
 
 console.log('Boardgames RESTful API server started on: ' + port);
