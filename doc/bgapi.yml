@@ -44,11 +44,21 @@ tags:
     description: "Tous les jeux de société"
   - name: "play"
     description: "Toutes les parties"
+  - name: "player"
+    description: "Tous les joueurs"
+  - name: "place"
+    description: "Tous les lieux"
+  - name: "user"
+    description: "Tous les utilisateurs"
+  - name: "mining"
+    description: "Mining de la base de données boardgamegeek"
+  - name: "system"
+    description: "Les commandes système"
 paths:
     # -- Jeux
     /boardgame:
         get:
-            summary: "Liste des jeux"
+            summary: "Liste paginée"
             description: |
                 Renvoie une liste de jeux.
                 Les paramètres sont le nombre d'élément 'size', la page 'page', l'ordre d'affichage 'sort' et un éventuel filtre par 'nom'.
@@ -77,21 +87,752 @@ paths:
               - boardgame
             responses:
                 200:
-                  description: Liste de features
+                  description: Liste de jeux
                   schema:
                       $ref: '#/definitions/Boardgames'
                 default:
                   description: Erreur non répertoriée
                   schema:
                     $ref: '#/definitions/Error'
-
+        post:
+          summary: "Ajout d'un jeux"
+          description: |
+              Ajout d'un jeux
+          parameters:
+            - name: body
+              description: "Jeux"
+              required: true
+              in: body
+              schema:
+                $ref: '#/definitions/Boardgame'
+          tags:
+            - boardgame
+          responses:
+            200:
+              description: Jeux
+              schema: 
+                $ref: '#/definitions/Boardgame'
+            default:
+              description: Erreur
+              schema:
+                $ref: '#/definitions/Error'
+    /boardgame/search:
+      post: 
+        summary: "Recherche paginée multicritères"
+        description: |
+            Renvoie une liste de jeux.
+            Différents filtres sont disponibles. La duree de la partie, le nombre de joueurs, les thematiques et les mecaniques.
+            Les paramètres sont le nombre d'élément 'size', la page 'page', l'ordre d'affichage 'sort' et un éventuel filtre par 'nom'.
+        parameters:
+          - name: body
+            description: "Filtre sur les noms (ex: '7 Wonders')"
+            required: false
+            in: body
+            schema:
+              $ref: '#/definitions/BoardgameSearch'
+        tags:
+          - boardgame
+        responses:
+            200:
+              description: Liste de jeux
+              schema:
+                  $ref: '#/definitions/Boardgames'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /boardgame/statistic:
+      get: 
+        summary: "Statistiques par jeux"
+        description: |
+            Renvoie une liste de jeux.
+            Met à jour les informations statistique. Comme le nombre de parties, de joeurs, de lieux.
+        tags:
+          - boardgame
+        responses:
+            200:
+              description: Liste de jeux
+              schema:
+                  $ref: '#/definitions/Boardgames'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /boardgame/mechanics:
+      get: 
+        summary: "Mécaniques"
+        description: |
+            Renvoie une liste de mécaniques.
+        tags:
+          - boardgame
+        responses:
+            200:
+              description: Liste de Mécaniques
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /boardgame/thematics:
+      get: 
+        summary: "Thématiques"
+        description: |
+            Renvoie une liste de thématiques.
+        tags:
+          - boardgame
+        responses:
+            200:
+              description: Liste de Thématiques
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /boardgame/subdomain:
+      get: 
+        summary: "Sous catégories"
+        description: |
+            Renvoie une liste de catégories.
+        tags:
+          - boardgame
+        responses:
+            200:
+              description: Liste de catégories
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /boardgame/{boardgameId}:
+      get: 
+        summary: "Récupère un jeu"
+        description: |
+            Renvoie une jeu.
+        parameters:
+          - in: path
+            name: boardgameId
+            type: integer
+            required: true
+            description: id du jeu
+        tags:
+          - boardgame
+        responses:
+            200:
+              description: Un Jeu
+              schema:
+                $ref: '#/definitions/Boardgame'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      put: 
+        summary: "Modifie un jeu"
+        description: |
+            Modifie une jeu.
+        parameters:
+          - in: path
+            name: boardgameId
+            type: integer
+            required: true
+            description: id du jeu
+          - in: body
+            name: body
+            schema:
+              $ref: '#/definitions/Boardgame'
+        tags:
+          - boardgame
+        responses:
+            200:
+              description: Un Jeu
+              schema:
+                $ref: '#/definitions/Boardgame'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      delete: 
+        summary: "Supprime un jeu"
+        description: |
+            Supprime une jeu.
+        parameters:
+          - in: path
+            name: boardgameId
+            type: integer
+            required: true
+            description: id du jeu
+        tags:
+          - boardgame
+        responses:
+            200:
+              description: Message de success
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /play:
+      get:
+        summary: "Récupère les parties"
+        description: |
+            Renvoie des parties.
+        tags:
+          - play
+        responses:
+            200:
+              description: une liste de parties
+              schema:
+                $ref: '#/definitions/Plays'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      post:
+        summary: "Ajoute une partie"
+        description: |
+            Ajoute une partie.
+        parameters:
+          - in: body
+            name: body
+            schema:
+              $ref: '#/definitions/Play'
+        tags:
+          - play
+        responses:
+            200:
+              description: une partie
+              schema:
+                $ref: '#/definitions/Play'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /play/{playId}:
+      get: 
+        summary: "Récupère une partie"
+        description: |
+            Renvoie une partie.
+        parameters:
+          - in: path
+            name: playId
+            type: integer
+            required: true
+            description: id de la partie
+        tags:
+          - play
+        responses:
+            200:
+              description: une partie
+              schema:
+                $ref: '#/definitions/Play'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      put: 
+        summary: "Modifie une partie"
+        description: |
+            Modifie une partie.
+        parameters:
+          - in: path
+            name: playId
+            type: integer
+            required: true
+            description: id de la partie
+          - in: body
+            name: body
+            schema:
+              $ref: '#/definitions/Play'
+        tags:
+          - play
+        responses:
+            200:
+              description: une partie
+              schema:
+                $ref: '#/definitions/Play'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      delete: 
+        summary: "Supprime une partie"
+        description: |
+            Supprime une partie.
+        parameters:
+          - in: path
+            name: playId
+            type: integer
+            required: true
+            description: id de la partie
+        tags:
+          - play
+        responses:
+            200:
+              description: Message de success
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /player:
+      get:
+        summary: "Récupère les joueurs"
+        description: |
+            Renvoie des joueurs.
+        tags:
+          - player
+        responses:
+            200:
+              description: une liste de joueurs
+              schema:
+                $ref: '#/definitions/Players'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      post:
+        summary: "Ajoute un joueur"
+        description: |
+            Ajoute une joueur.
+        parameters:
+          - in: body
+            name: body
+            schema:
+              $ref: '#/definitions/Player'
+        tags:
+          - player
+        responses:
+            200:
+              description: un joueur
+              schema:
+                $ref: '#/definitions/Player'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /player/{playerId}:
+      get: 
+        summary: "Récupère un joueur"
+        description: |
+            Renvoie un joueur.
+        parameters:
+          - in: path
+            name: playerId
+            type: integer
+            required: true
+            description: id du joueur
+        tags:
+          - player
+        responses:
+            200:
+              description: un joueur
+              schema:
+                $ref: '#/definitions/Player'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      put: 
+        summary: "Modifie un joueur"
+        description: |
+            Modifie un joueur.
+        parameters:
+          - in: path
+            name: playerId
+            type: integer
+            required: true
+            description: id du joueur
+          - in: body
+            name: body
+            schema:
+              $ref: '#/definitions/Player'
+        tags:
+          - player
+        responses:
+            200:
+              description: un joueur
+              schema:
+                $ref: '#/definitions/Player'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      delete: 
+        summary: "Supprime un joueur"
+        description: |
+            Supprime un joueur.
+        parameters:
+          - in: path
+            name: playerId
+            type: integer
+            required: true
+            description: id du joueur
+        tags:
+          - player
+        responses:
+            200:
+              description: Message de success
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /player/statistic:
+      get: 
+        summary: "Statistiques par joueurs"
+        description: |
+            Renvoie une liste de joueurs.
+            Met à jour les informations statistiques.
+        tags:
+          - player
+        responses:
+            200:
+              description: Liste de joueurs
+              schema:
+                  $ref: '#/definitions/Players'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /place:
+      get:
+        summary: "Récupère les lieux"
+        description: |
+            Renvoie des lieux.
+        tags:
+          - place
+        responses:
+            200:
+              description: une liste de lieux
+              schema:
+                $ref: '#/definitions/Places'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      post:
+        summary: "Ajoute un lieux"
+        description: |
+            Ajoute une lieux.
+        parameters:
+          - in: body
+            name: body
+            schema:
+              $ref: '#/definitions/Place'
+        tags:
+          - player
+        responses:
+            200:
+              description: un lieux
+              schema:
+                $ref: '#/definitions/Place'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /place/{placeId}:
+      get: 
+        summary: "Récupère un lieux"
+        description: |
+            Renvoie un lieux.
+        parameters:
+          - in: path
+            name: placeId
+            type: integer
+            required: true
+            description: id du lieux
+        tags:
+          - place
+        responses:
+            200:
+              description: un lieux
+              schema:
+                $ref: '#/definitions/Place'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      put: 
+        summary: "Modifie un lieux"
+        description: |
+            Modifie un lieux.
+        parameters:
+          - in: path
+            name: placeId
+            type: integer
+            required: true
+            description: id du lieux
+          - in: body
+            name: body
+            schema:
+              $ref: '#/definitions/Place'
+        tags:
+          - place
+        responses:
+            200:
+              description: un lieux
+              schema:
+                $ref: '#/definitions/Place'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      delete: 
+        summary: "Supprime un lieux"
+        description: |
+            Supprime un lieux.
+        parameters:
+          - in: path
+            name: placeId
+            type: integer
+            required: true
+            description: id du lieux
+        tags:
+          - place
+        responses:
+            200:
+              description: Message de success
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /place/statistic:
+      get: 
+        summary: "Statistiques par lieux"
+        description: |
+            Renvoie une liste de lieux.
+            Met à jour les informations statistiques.
+        tags:
+          - place
+        responses:
+            200:
+              description: Liste de jeux
+              schema:
+                  $ref: '#/definitions/Places'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /user:
+      get:
+        summary: "Récupère les user"
+        description: |
+            Renvoie des user.
+        tags:
+          - user
+        responses:
+            200:
+              description: une liste de user
+              schema:
+                $ref: '#/definitions/Users'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      post:
+        summary: "Ajoute un user"
+        description: |
+            Ajoute une user.
+        parameters:
+          - in: body
+            name: body
+            schema:
+              $ref: '#/definitions/User'
+        tags:
+          - user
+        responses:
+            200:
+              description: un user
+              schema:
+                $ref: '#/definitions/User'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /user/authenticate:
+      post:
+        summary: "Authentifie l'utilisateur"
+        description: |
+          Contrôle un compte par un login et un mot de passe.
+          Recupere un objet d'authentification.
+        parameters:
+          - in: body
+            name: body
+            schema:
+              $ref: '#/definitions/AuthentificationQuery'
+        tags:
+          - user
+        responses:
+          200:
+            description: Retourne un jeton d'authentification
+            schema:
+              $ref: '#/definitions/AuthentificationResponse'
+          default:
+            description: Erreur non répertoriée
+            schema:
+              $ref: '#/definitions/Error'
+    /user/{userId}:
+      get: 
+        summary: "Récupère un user"
+        description: |
+            Renvoie un user.
+        parameters:
+          - in: path
+            name: userId
+            type: integer
+            required: true
+            description: id du user
+        tags:
+          - user
+        responses:
+            200:
+              description: un user
+              schema:
+                $ref: '#/definitions/User'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      put: 
+        summary: "Modifie un user"
+        description: |
+            Modifie un user.
+        parameters:
+          - in: path
+            name: userId
+            type: integer
+            required: true
+            description: id du user
+          - in: body
+            name: body
+            schema:
+              $ref: '#/definitions/User'
+        tags:
+          - user
+        responses:
+            200:
+              description: un user
+              schema:
+                $ref: '#/definitions/User'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+      delete: 
+        summary: "Supprime un user"
+        description: |
+            Supprime un user.
+        parameters:
+          - in: path
+            name: userId
+            type: integer
+            required: true
+            description: id de l'user
+        tags:
+          - user
+        responses:
+            200:
+              description: Message de success
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /mining/boardgame:
+      get: 
+        summary: "Recherche des jeux par l'api boardgamegeek"
+        description: |
+            Renvoie une liste d'identifiants.
+        parameters:
+          - in: query
+            name: name
+            type: string
+            required: true
+            description: "nom du jeux recherché"
+        tags:
+          - mining
+        responses:
+            200:
+              description: Une liste d'identifiants
+              schema:
+                $ref: '#/definitions/BoardgameMiningResponse'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /mining/boardgame/{xmlapiId}:
+      get: 
+        summary: "Recherche et enregistre un jeux depuis l'API XML boardgamegeek"
+        description: |
+            Renvoie un jeux.
+        parameters:
+          - in: path
+            name: xmlapiId
+            type: integer
+            required: true
+            description: id jeu pour l'API XML boardgamegeek
+        tags:
+          - mining
+        responses:
+            200:
+              description: Un jeu
+              schema:
+                $ref: '#/definitions/Boardgame'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
+    /mining/play:
+      get: 
+        summary: "Recherche et enregistre des parties depuis l'API XML boardgamegeek"
+        description: |
+            Renvoi une liste de parties paginé.
+            Par défaut 100 éléments à la page 1.
+        parameters:
+          - in: query
+            name: size
+            type: integer
+            required: false
+            description: nombre de parties
+          - in: query
+            name: page
+            type: integer
+            required: false
+            description: page
+        tags:
+          - mining
+        responses:
+            200:
+              description: Liste de parties
+              schema:
+                $ref: '#/definitions/Plays'
+            default:
+              description: Erreur non répertoriée
+              schema:
+                $ref: '#/definitions/Error'
 definitions:
-    # -- collection de jeux
+    # -- liste jeux
     Boardgames:
         type: array
         description: "Liste paginé de jeux"
         items:
             $ref: '#/definitions/Boardgame'
+    # -- liste Plays
+    Plays:
+        type: array
+        description: "Liste paginé de parties"
+        items:
+            $ref: '#/definitions/Play'
+    # -- liste Players
+    Players:
+        type: array
+        description: "Liste paginé de joueurs"
+        items:
+            $ref: '#/definitions/Player'
+    # -- liste Places
+    Places:
+        type: array
+        description: "Liste paginé de lieux"
+        items:
+            $ref: '#/definitions/Place'
+    # -- liste Users
+    Users:
+        type: array
+        description: "Liste paginé d'utilisateur"
+        items:
+            $ref: '#/definitions/User'
     # -- jeux
     Boardgame:
         type: object
@@ -99,6 +840,95 @@ definitions:
         properties:
             name:
                 type: string
+    # -- Play
+    Play:
+        type: object
+        description: "Play"
+        properties:
+            name:
+                type: string
+    # -- Player
+    Player:
+        type: object
+        description: "Player"
+        properties:
+            name:
+                type: string
+    # -- Place
+    Place:
+        type: object
+        description: "Place"
+        properties:
+            name:
+                type: string
+    # -- User
+    User:
+        type: object
+        description: "User"
+        properties:
+            name:
+                type: string
+    # -- BoardgameSearch 
+    BoardgameSearch: 
+      type: object
+      description: "Critères de recherche de jeux"
+      properties:
+        size:
+          type: number
+        page:
+          type: number
+        name:
+          type: string
+        filters:
+          type: object
+          properties:
+            min_time: 
+              type: number
+            max_time:
+              type: number
+            min_players:
+              type: number
+            max_players:
+              type: number
+            mechanics:
+              type: array
+              items:
+                type: string
+            thematics:
+              type: array
+              items:
+                type: string
+    # -- AuthentificationQuery
+    AuthentificationQuery: 
+        type: object
+        description: "Query"
+        properties:
+          username:
+            type: string
+          password:
+            type: string
+    # -- AuthentificationResponse
+    AuthentificationResponse: 
+        type: object
+        description: "Response"
+        properties:
+          success:
+            type: string
+          message:
+            type: string
+          token:
+            type: string
+    # -- BoardgameMiningResponse
+    BoardgameMiningResponse: 
+        type: object
+        description: "Response"
+        properties:
+          xmlapi_id:
+            type: number
+          name:
+            type: string
+          year_published:
+            type: number
     # -- Erreur non répertoriée
     Error:
         type: object

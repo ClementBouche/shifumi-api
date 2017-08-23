@@ -10,7 +10,4 @@ module.exports = function(app) {
 
   app.route('/mining/play')
     .get(mining.plays);
-
-  app.route('/mining/play/:id')
-    .get(mining.play_by_id);
 };

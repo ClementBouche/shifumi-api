@@ -161,10 +161,3 @@ function findOrSavePlayer(playerName) {
     }
   });
 };
-
-
-exports.play_by_id = function(req, res) {
-  res.json({
-    message: 'play by id success'
-  });
-};
