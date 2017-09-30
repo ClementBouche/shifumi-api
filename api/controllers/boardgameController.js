@@ -5,10 +5,23 @@ var mongoose = require('mongoose');
 var Boardgame = mongoose.model('Boardgames');
 
 exports.list = function(req, res) {
-  var filters = {},
-      options = {
-        sort: { rank: 1 }
-      };
+  var size = 500 ;
+  if (req.query.size) {
+    size = parseInt(req.query.size);
+  }
+  var page = 0 ;
+  if (req.query.page) {
+    page = parseInt(req.query.page) - 1;
+  }
+  var skip = page * size ;
+
+  var options = {
+    sort: { rank: 1 },
+    skip: skip,
+    limit: size
+  };
+
+  var filters = {};
   if(req.query.name) {
     filters.name = new RegExp(req.query.name.trim(), 'i');
     options.sort = { name: 1 };
