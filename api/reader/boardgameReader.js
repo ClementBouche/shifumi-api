@@ -79,7 +79,7 @@ var parseSuggestedPlayers = function(jsondata) {
     return {};
   }
   return {
-    votes: jsondata[0]["$"].totalVotes,
+    votes: jsondata[0]["$"]['totalVotes'] || jsondata[0]["$"]['totalvotes'] || 0,
     poll: poll
   };
 }
@@ -209,6 +209,9 @@ var parseRank = function(jsondata) {
   var data = jsondata[0]['rank'];
   for (var i = 0; i < data.length; i++) {
     if(data[i]['$'].id === '1') {
+      if (data[i]['$'].value === 'Not Ranked') {
+        return null;
+      }
       return data[i]['$'].value;
     }
   }

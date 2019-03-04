@@ -2,6 +2,10 @@
 
 var requestPromise = require('request-promise');
 
+process.argv.forEach(function (val, index, array) {
+  console.log(index + ': ' + val);
+});
+
 var totalPlays = 820,
   playUrl      = 'http://rks1306w176.ign.fr/search/play',
   boardgameUrl = 'http://rks1306w176.ign.fr/search/boardgame';

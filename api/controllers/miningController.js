@@ -39,45 +39,24 @@ exports.boardgames = function(req, res) {
 
 
 exports.boardgame_by_id = function(req, res) {
-  Boardgame.findOne({
-    xmlapi_id: req.params.id
-  }, function(err, result) {
-    if (err) {
-      res.json({
-        message: 'Error'
-      })
-    } else if (result && !req.query.original) {
-      res.json(result);
-    } else {
-      getXMLBoardgameById(req, res);
-    }
-  });
-};
-
-function getXMLBoardgameById(req, res) {
-  var boardgameUrl = 'https://www.boardgamegeek.com/xmlapi/boardgame';
-  var xmlResponse = '';
+  const boardgameUrl = 'https://www.boardgamegeek.com/xmlapi/boardgame';
+  const id = req.params.id;
+  let xmlResponse = '';
   request
-    .get(`${boardgameUrl}/${req.params.id}?stats=1`)
-    .on('data', function(chunk) {
+    .get(`${boardgameUrl}/${id}?stats=1`)
+    .on('data', (chunk) => {
       xmlResponse += chunk;
     })
-    .on('end', function(response) {
-      xml2js.parseString(xmlResponse, function(err, result) {
-        if (req.query.original) {
-          res.json(result);
-        } else {
-          var new_boargame = new Boardgame(boardgameReader.parseBoardgame(result));
-          new_boargame.save(function(err, boardgame) {
-            if (err) {
-              res.json({
-                message: err
-              });
-            } else {
-              res.json(boardgame);
-            }
+    .on('end', () => {
+      xml2js.parseString(xmlResponse, (err, jsonReponse) => {
+        // if ?original=true return rawResponse
+        if (req.query.original) return res.json(jsonReponse);
+        // else updateboardgame
+        const bg = boardgameReader.parseBoardgame(jsonReponse);
+          Boardgame.findOneAndUpdate({xmlapi_id: id}, bg, {new: true, upsert: true}, (err, document) => {
+            if (err) return res.json({message: 'Error', error: err, bg: bg});
+            res.json(document);
           });
-        }
       });
     });
 };
