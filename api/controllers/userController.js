@@ -17,7 +17,6 @@ exports.setup = function(req, res) {
   // save the sample user
   new_user.save(function(err) {
     if (err) throw err;
-    console.log('User saved successfully');
     res.json({ success: true });
   });
 }

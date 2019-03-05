@@ -9,6 +9,9 @@ module.exports = function(app) {
     .get(play.list)
     .post(tokenService.checkUser, play.create);
 
+  app.route('/play/search')
+    .post(play.search);
+
   app.route('/play/:playid')
     .get(play.read)
     .put(tokenService.checkUser, play.update)

@@ -74,8 +74,6 @@ var parseSuggestedPlayers = function(jsondata) {
       });
     }
   } catch(error) {
-    console.error(error);
-    console.log(jsondata);
     return {};
   }
   return {

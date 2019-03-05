@@ -1,21 +1,30 @@
 'use strict';
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const Play = mongoose.model('Plays');
 
-var Play = mongoose.model('Plays');
+const requestHelperService = require('../services/requestHelperService');
 
 exports.list = function(req, res) {
-  var size = 10 ;
-  if (req.query.size) {
-    size = parseInt(req.query.size);
-  }
-  var page = 0 ;
-  if (req.query.page) {
-    page = parseInt(req.query.page) - 1;
-  }
-  var skip = page * size ;
+  const size = requestHelperService.getSize(req, 10);
+  const page = requestHelperService.getPage(req);
+  const skip = page * size ;
 
-  Play.getPaginatedPlays(skip, size, function(err, plays) {
+  Play.getPaginatedPlays({}, skip, size, function(err, plays) {
+    if(err) {
+      res.send(err);
+    }
+    res.json(plays);
+  })
+};
+
+exports.search = function(req, res) {
+  const condition = {};
+  if (req.body && req.body.boardgame) {
+    condition['boardgame_name'] = req.body.boardgame
+  }
+
+  Play.getPaginatedPlays(condition, 0, null, function(err, plays) {
     if(err) {
       res.send(err);
     }
@@ -24,7 +33,7 @@ exports.list = function(req, res) {
 };
 
 exports.create = function(req, res) {
-  var new_boargame = new Play(req.body);
+  const new_boargame = new Play(req.body);
   new_boargame.save(function(err, play) {
     if (err)
       res.send(err);
@@ -66,8 +75,8 @@ exports.delete = function(req, res) {
 };
 
 
-Play.getPaginatedPlays = function(skip, limit, callback) {
-  Play.find(null, null, {
+Play.getPaginatedPlays = function(condition, skip, limit, callback) {
+  Play.find(condition, null, {
       sort: { date: -1 },
       skip: skip,
       limit: limit
@@ -77,3 +86,6 @@ Play.getPaginatedPlays = function(skip, limit, callback) {
     }
   );
 }
+
+
+
