@@ -40,8 +40,7 @@ exports.create = function(req, res) {
   }
 
   Boardgame.getPaginated(size, skip, filters, function(err, boardgames) {
-    if (err)
-      res.send(err);
+    if (err) return res.send(err);
     res.json(boardgames);
  });
 };

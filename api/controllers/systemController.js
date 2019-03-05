@@ -9,20 +9,16 @@ var Place = mongoose.model('Places');
 
 exports.vaccum = function(req, res) {
   Boardgame.remove({}, function(err, play) {
-    if (err)
-      res.send(err);
+    if (err) return res.send(err);
   });
   Play.remove({}, function(err, play) {
-    if (err)
-      res.send(err);
+    if (err) return res.send(err);
   });
   Player.remove({}, function(err, play) {
-    if (err)
-      res.send(err);
+    if (err) return res.send(err);
   });
   Place.remove({}, function(err, play) {
-    if (err)
-      res.send(err);
+    if (err) return res.send(err);
   });
   res.json({
     message: "Base de données vide"

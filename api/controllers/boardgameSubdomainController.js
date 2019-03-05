@@ -8,8 +8,7 @@ exports.list = function(req, res) {
   Boardgame.find({},{
     subdomain: 1
   }, function(err, boardgames) {
-    if (err)
-      res.send(err);
+    if (err) return res.send(err);
 
     let tmp = [];
     for (var i = 0; i < boardgames.length; i++) {

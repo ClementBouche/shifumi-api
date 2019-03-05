@@ -109,9 +109,7 @@ function findOrSavePlay(play) {
   play,{
     upsert: true
   }, function(err, result) {
-    if (err) {
-      return err;
-    }
+    if (err) return err;
   });
 };
 function findOrSavePlace(placeName) {
@@ -122,9 +120,7 @@ function findOrSavePlace(placeName) {
   },{
     upsert: true
   }, function(err, result) {
-    if (err) {
-      return err;
-    }
+    if (err) return err;
   });
 };
 function findOrSavePlayer(playerName) {
@@ -135,8 +131,6 @@ function findOrSavePlayer(playerName) {
   },{
     upsert: true
   }, function(err, result) {
-    if (err) {
-      return err;
-    }
+    if (err) return err;
   });
 };

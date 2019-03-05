@@ -35,8 +35,7 @@ exports.search = function(req, res) {
 exports.create = function(req, res) {
   const new_boargame = new Play(req.body);
   new_boargame.save(function(err, play) {
-    if (err)
-      res.send(err);
+    if (err) return res.send(err);
     res.json(play);
   });
 };
@@ -44,8 +43,7 @@ exports.create = function(req, res) {
 
 exports.read = function(req, res) {
   Play.findById(req.params.playid, function(err, play) {
-    if (err)
-      res.send(err);
+    if (err) return res.send(err);
     res.json(play);
   });
 };
@@ -55,8 +53,7 @@ exports.update = function(req, res) {
   Play.findOneAndUpdate(req.params.playid, req.body, {
     new: true
   }, function(err, play) {
-    if (err)
-      res.send(err);
+    if (err) return res.send(err);
     res.json(play);
   });
 };
@@ -66,8 +63,7 @@ exports.delete = function(req, res) {
   Play.remove({
     _id: req.params.playid
   }, function(err, play) {
-    if (err)
-      res.send(err);
+    if (err) return res.send(err);
     res.json({
       message: 'Play successfully deleted'
     });
