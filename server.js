@@ -1,19 +1,21 @@
-var express      = require('express');
-var cors         = require('cors');
-var mongoose     = require('mongoose');
-var bodyParser   = require('body-parser');
-var morgan       = require('morgan');
-var swaggerTools = require('swagger-tools');
-var YAML         = require('yamljs');
-var config       = require('./config'); // get our config file
+// load librairies
+const express      = require('express');
+const cors         = require('cors');
+const mongoose     = require('mongoose');
+const bodyParser   = require('body-parser');
+const morgan       = require('morgan');
+const swaggerTools = require('swagger-tools');
+const YAML         = require('yamljs');
+const config       = require('./config'); // get our config file
 
-var Boardgame = require('./api/models/boardgameModel');
-var Play = require('./api/models/playModel');
-var Player = require('./api/models/playerModel');
-var Place = require('./api/models/placeModel');
-var User = require('./api/models/userModel');
+// register all models
+require('./api/models/boardgameModel');
+require('./api/models/playModel');
+require('./api/models/playerModel');
+require('./api/models/placeModel');
+require('./api/models/userModel');
 
-var app = express();
+const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -29,28 +31,32 @@ mongoose.connect(
   }
 );
 
-var swaggerDoc   = YAML.load('./doc/bgapi.yml');
+const swaggerDoc = YAML.load('./doc/bgapi.yml');
 swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
   // Serve the Swagger documents and Swagger UI
   app.use(middleware.swaggerUi());
 });
 
-var boardgameRoutes = require('./api/routes/boardgameRoutes');
+const boardgameRoutes = require('./api/routes/boardgameRoutes');
 boardgameRoutes(app);
-var playRoutes = require('./api/routes/playRoutes');
+const playRoutes = require('./api/routes/playRoutes');
 playRoutes(app);
-var playerRoutes = require('./api/routes/playerRoutes');
+const playerRoutes = require('./api/routes/playerRoutes');
 playerRoutes(app);
-var placeRoutes = require('./api/routes/placeRoutes');
+const placeRoutes = require('./api/routes/placeRoutes');
 placeRoutes(app);
-var userRoutes = require('./api/routes/userRoutes');
+const userRoutes = require('./api/routes/userRoutes');
 userRoutes(app);
-var systemRoutes = require('./api/routes/systemRoutes');
+const systemRoutes = require('./api/routes/systemRoutes');
 systemRoutes(app);
-var searchRoutes = require('./api/routes/miningRoutes');
+const searchRoutes = require('./api/routes/miningRoutes');
 searchRoutes(app);
 
-var port = process.env.PORT || 3000;
+app.get('/', function(req, res) {
+  res.redirect('/docs');
+});
+
+const port = process.env.PORT || 3000;
 
 app.listen(port);
 
