@@ -11,19 +11,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.18.10"
   },
   "dependencies": {
-    "body-parser": "^1.17.2",
-    "cors": "^2.8.3",
-    "express": "^4.15.3",
-    "jsonwebtoken": "^7.4.3",
-    "mongoose": "^4.10.2",
-    "morgan": "^1.8.2",
-    "request": "^2.81.0",
-    "request-promise": "^4.2.1",
-    "swagger-tools": "^0.10.1",
-    "swagger-ui": "^3.1.6",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.5.0",
+    "mongoose": "^5.4.17",
+    "morgan": "^1.9.1",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
+    "swagger-tools": "^0.10.4",
+    "swagger-ui": "^3.21.0",
     "xml2js": "^0.4.17",
     "yamljs": "^0.3.0"
   }

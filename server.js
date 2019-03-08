@@ -25,10 +25,7 @@ app.use(morgan('dev'));
 
 mongoose.Promise = global.Promise;
 mongoose.connect(
-  config.database,
-  {
-    useMongoClient: true
-  }
+  config.database, { useNewUrlParser: true }
 );
 
 const swaggerDoc = YAML.load('./doc/bgapi.yml');
