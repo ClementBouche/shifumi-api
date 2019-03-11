@@ -28,6 +28,9 @@ exports.create = function(req, res) {
   req.body.page ? page = parseInt(req.body.page) - 1 : page = 1 ;
   var skip = page * size ;
 
+  // 0 rank filter (to hide extension)
+  filters.rank = {$ne: 0, $ne: null};
+
   // 1 // name
   if (req.body.name) {
     name = req.body.name.trim();
@@ -44,7 +47,8 @@ exports.create = function(req, res) {
   if (req.body.min_time || req.body.max_time) {
     filters.playing_time = {
       $gte: req.body.min_time ? req.body.min_time : 0,
-      $lte: req.body.max_time ? req.body.max_time : 9999
+      $lte: req.body.max_time ? req.body.max_time : 9999,
+      $ne: 0
     };
   }
   // 4 // mechanics
