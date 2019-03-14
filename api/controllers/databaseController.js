@@ -11,30 +11,29 @@ var Play = mongoose.model('Plays');
 var Player = mongoose.model('Players');
 var Place = mongoose.model('Places');
 
-
 exports.boardgames = function(req, res) {
-  var searchUrl = 'https://www.boardgamegeek.com/xmlapi/search';
+  var searchUrl = 'https://www.boardgamegeek.com/xmlapi2/search';
   var xmlResponse = '';
   if(!req.query.name) {
-    res.json({
+    return res.json({
       message: 'Erreur : Ajouter un nom en parametre'
     }) ;
-  } else {
-    request
-      .get(`${searchUrl}?search=${req.query.name}`)
-      .on('data', function(chunk) {
-        xmlResponse += chunk;
-      })
-      .on('end', function(response) {
-        xml2js.parseString(xmlResponse, function(err, result) {
-          if (req.query.original) {
-            res.json(result);
-          } else {
-            res.json(boardgameReader.parseBoardgames(result));
-          }
-        });
-      });
   }
+  request
+    .get(`${searchUrl}?query=${req.query.name}&type=boardgame`)
+    .on('data', function(chunk) {
+      xmlResponse += chunk;
+    })
+    .on('end', function(response) {
+      xml2js.parseString(xmlResponse, function(err, result) {
+        if (req.query.original) return res.json(result);
+        let bgs = boardgameReader.parseBoardgames(result);
+        if (req.query.size) {
+          bgs = bgs.slice(0, req.query.size);
+        }
+        return res.json(bgs);
+      });
+    });
 };
 
 
@@ -50,13 +49,15 @@ exports.boardgame_by_id = function(req, res) {
     .on('end', () => {
       xml2js.parseString(xmlResponse, (err, jsonReponse) => {
         // if ?original=true return rawResponse
-        if (req.query.original) return res.json(jsonReponse);
+        if (req.query.original === 'true') return res.json(jsonReponse);
         // else updateboardgame
         const bg = boardgameReader.parseBoardgame(jsonReponse);
-          Boardgame.findOneAndUpdate({xmlapi_id: id}, bg, {new: true, upsert: true}, (err, document) => {
-            if (err) return res.json({message: 'Error', error: err, bg: bg});
-            res.json(document);
-          });
+        // if ? preview = true return bgResponse without saving
+        if (req.query.preview === 'true') return res.json(bg);
+        Boardgame.findOneAndUpdate({xmlapi_id: id}, bg, {new: true, upsert: true}, (err, document) => {
+          if (err) return res.json({message: 'Error', error: err, bg: bg});
+          res.json(document);
+        });
       });
     });
 };

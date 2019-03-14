@@ -1,19 +1,32 @@
 'use strict';
 
 exports.parseBoardgames = function(jsondata) {
-  var data = jsondata.boardgames.boardgame;
+  var data = jsondata.items.item;
+  if (!data) {
+    return [];
+  }
   var boardgames = [];
   for (var i = 0; i < data.length; i++) {
     var boardgame = {
-      xmlapi_id: data[i]["$"].objectid,
-      name: data[i].name[0]['_']
+      xmlapi_id: data[i]["$"]['id'],
+      name: readValue(data[i], 'name'),
+      year_published: readValue(data[i], 'yearpublished')
     };
-    if (data[i].hasOwnProperty('yearpublished') && data[i].yearpublished.length !== 0) {
-      boardgame.year_published = data[i].yearpublished[0];
-    }
     boardgames.push(boardgame);
   }
   return boardgames;
+}
+
+var readValue = function(item, value) {
+  if (!item.hasOwnProperty(value) || item[value].length === 0) {
+    return '';
+  }
+  if (!item[value][0].hasOwnProperty('$') ||
+      !item[value][0]['$'].hasOwnProperty('value')
+  ) {
+    return '';
+  }
+  return item[value][0]['$']['value'];
 }
 
 exports.parseBoardgame = function(jsondata) {

@@ -46,8 +46,8 @@ const userRoutes = require('./api/routes/userRoutes');
 userRoutes(app);
 const systemRoutes = require('./api/routes/systemRoutes');
 systemRoutes(app);
-const searchRoutes = require('./api/routes/miningRoutes');
-searchRoutes(app);
+const databaseRoutes = require('./api/routes/databaseRoutes');
+databaseRoutes(app);
 
 app.get('/', function(req, res) {
   res.redirect('/docs');
