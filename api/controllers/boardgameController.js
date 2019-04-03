@@ -21,7 +21,9 @@ exports.list = function(req, res) {
     limit: size
   };
 
-  var filters = {};
+  var filters = {
+    rank: {$ne: 0, $ne: null}
+  };
   if(req.query.name) {
     filters.name = new RegExp(req.query.name.trim(), 'i');
     options.sort = { name: 1 };
