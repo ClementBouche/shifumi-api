@@ -61,7 +61,9 @@ exports.create = function(req, res) {
   }
 
   Boardgame.find(filters, projection, {
-      sort: { rank: 1, name: filters.name ? 1 : 0 } 
+      sort: { rank: 1, name: filters.name ? 1 : 0 },
+      limit: size,
+      skip: skip
     })
     .limit(size)
     .exec().then((boardgames) => {
