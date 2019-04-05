@@ -60,14 +60,28 @@ exports.create = function(req, res) {
     filters.thematics = {$in: req.body.thematics}
   }
 
-  Boardgame.find(filters, projection, {
+  const promiseA = Boardgame.countDocuments(filters)
+    .then((count) => {
+      return count;
+    });
+
+  const promiseB = Boardgame.find(filters, projection, {
       sort: { rank: 1, name: filters.name ? 1 : 0 },
       limit: size,
       skip: skip
     })
     .limit(size)
     .exec().then((boardgames) => {
-      res.json(boardgames);
+      return {
+        size: size,
+        page: req.body.page || 1,
+        result: boardgames
+      }
     });
+
+    Promise.all([promiseA, promiseB]).then(([count, json]) => {
+      json.count = count;
+      return res.json(json);
+    })
 
 };
