@@ -4,10 +4,20 @@ var mongoose = require('mongoose');
 
 var Player = mongoose.model('Players');
 
+const requestHelperService = require('../services/requestHelperService');
+
 exports.list = function(req, res) {
-  Player.find({}, function(err, player) {
+  const size = requestHelperService.getSize(req, 10);
+  const page = requestHelperService.getPage(req);
+  const skip = page * size ;
+
+  Player.find({}, null, {
+    sort: { name: 1 },
+    skip: skip,
+    limit: size
+  }, function(err, players) {
     if (err) return res.send(err);
-    res.json(player);
+    res.json(players);
   });
 };
 
@@ -55,7 +65,6 @@ exports.search = function(req, res) {
     message: 'en cours de developpement'
   });
 }
-
 
 
 exports.search_by_id = function(req, res) {

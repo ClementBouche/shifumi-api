@@ -33,8 +33,8 @@ exports.search = function(req, res) {
 };
 
 exports.create = function(req, res) {
-  const new_boargame = new Play(req.body);
-  new_boargame.save(function(err, play) {
+  const new_play = new Play(req.body);
+  new_play.save(function(err, play) {
     if (err) return res.send(err);
     res.json(play);
   });
