@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose');
 const Play = mongoose.model('Plays');
+const Boardgame = mongoose.model('Boardgames');
 
 const requestHelperService = require('../../services/requestHelperService');
 
@@ -32,12 +33,21 @@ exports.search = function(req, res) {
   })
 };
 
+
 exports.create = function(req, res) {
   const new_play = new Play(req.body);
-  new_play.save(function(err, play) {
-    if (err) return res.send(err);
-    res.json(play);
-  });
+  // look for boardgame id
+  Boardgame.findOne({
+    name: new_play.boardgame_name
+  }, function(err, boardgame) {
+    const xmlId = boardgame && boardgame.xmlapi_id ? boardgame.xmlapi_id : '';
+    new_play.boardgame_xmlapi_id = xmlId;
+
+    new_play.save(function(err, play) {
+      if (err) return res.send(err);
+      res.json(play);
+    });
+  })
 };
 
 
@@ -50,17 +60,22 @@ exports.read = function(req, res) {
 
 
 exports.update = function(req, res) {
-  Play.findOneAndUpdate(req.params.playid, req.body, {
+  Play.findById(req.params.playid, {
     new: true
   }, function(err, play) {
     if (err) return res.send(err);
-    res.json(play);
+    // should this do the trick?
+    const new_play = Object.assign(play, req.body);
+    new_play.save(function(err, play) {
+      if (err) return res.send(err);
+      res.json(play);
+    });
   });
 };
 
 
 exports.delete = function(req, res) {
-  Play.remove({
+  Play.deleteOne({
     _id: req.params.playid
   }, function(err, play) {
     if (err) return res.send(err);
