@@ -8,11 +8,9 @@ module.exports = function(app) {
   app.route('/user/authenticate')
     .post(user.authenticate);
 
-  app.route('/user/setup')
-    .get(tokenService.checkUser, user.setup);
-
   app.route('/user')
-    .get(tokenService.checkAdmin, user.list)
+    //.get(tokenService.checkAdmin, user.list)
+    .get(user.list)
     .post(tokenService.checkAdmin, user.create);
 
   app.route('/user/:userid')

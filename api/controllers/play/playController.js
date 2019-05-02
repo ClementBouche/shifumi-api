@@ -3,11 +3,11 @@
 const mongoose = require('mongoose');
 const Play = mongoose.model('Plays');
 
-const requestHelperService = require('../services/requestHelperService');
+const requestHelperService = require('../../services/requestHelperService');
 
 exports.list = function(req, res) {
-  const size = requestHelperService.getSize(req, 10);
-  const page = requestHelperService.getPage(req);
+  const size = requestHelperService.getQuerySize(req, 10);
+  const page = requestHelperService.getQueryPage(req);
   const skip = page * size ;
 
   Play.getPaginatedPlays({}, skip, size, function(err, plays) {
@@ -82,6 +82,3 @@ Play.getPaginatedPlays = function(condition, skip, limit, callback) {
     }
   );
 }
-
-
-

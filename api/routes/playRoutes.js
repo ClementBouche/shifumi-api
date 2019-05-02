@@ -3,7 +3,7 @@
 var tokenService = require('../jwt/tokenService');
 
 module.exports = function(app) {
-  var play = require('../controllers/playController');
+  var play = require('../controllers/play/playController');
 
   app.route('/play')
     .get(play.list)

@@ -4,6 +4,8 @@ var mongoose = require('mongoose');
 
 var Boardgame = mongoose.model('Boardgames');
 
+const requestHelperService = require('../../services/requestHelperService');
+
 const projection = {
   name: 1,
   min_players: 1,
@@ -22,11 +24,11 @@ const projection = {
 };
 
 exports.create = function(req, res) {
-  var size, page, name, filters = {};
+  let size, page, skip, name, filters = {};
   // pages
-  req.body.size ? size = parseInt(req.body.size) : size = 100 ;
-  req.body.page ? page = parseInt(req.body.page) - 1 : page = 1 ;
-  var skip = page * size ;
+  size = requestHelperService.getBodySize(req, 10);
+  page = requestHelperService.getBodyPage(req);
+  skip = page * size ;
 
   // 0 rank filter (to hide extension)
   filters.rank = {$ne: 0, $ne: null};

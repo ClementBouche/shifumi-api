@@ -6,23 +6,13 @@ var config  = require('./../../config'); // get our config file
 
 var User = mongoose.model('Users');
 
-exports.setup = function(req, res) {
-  // create a sample user
-  var new_user = new User({ 
-    username: 'cbouche', 
-    name: 'Bouché',
-    password: 'cbouche',
-    admin: true 
-  });
-  // save the sample user
-  new_user.save(function(err) {
-    if (err) throw err;
-    res.json({ success: true });
-  });
-}
-
 exports.list = function(req, res) {
-  User.find({}, function(err, users) {
+  const projection = {
+    username: 1,
+    email: 1,
+    admin: 1
+  };
+  User.find({}, projection, function(err, users) {
     if (err) return res.send(err);
     res.json(users);
   });
@@ -95,7 +85,9 @@ exports.authenticate = function(req, res) {
         res.json({
           success: true,
           message: 'Enjoy your token!',
-          token: token
+          token: token,
+          id: user.id,
+          username: user.username
         });
       }   
     }

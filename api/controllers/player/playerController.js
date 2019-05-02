@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 
 var Player = mongoose.model('Players');
 
-const requestHelperService = require('../services/requestHelperService');
+const requestHelperService = require('../../services/requestHelperService');
 
 exports.list = function(req, res) {
   const size = requestHelperService.getSize(req, 10);
