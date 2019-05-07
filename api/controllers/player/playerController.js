@@ -7,8 +7,8 @@ var Player = mongoose.model('Players');
 const requestHelperService = require('../../services/requestHelperService');
 
 exports.list = function(req, res) {
-  const size = requestHelperService.getSize(req, 10);
-  const page = requestHelperService.getPage(req);
+  const size = requestHelperService.getQuerySize(req, 10);
+  const page = requestHelperService.getQueryPage(req);
   const skip = page * size ;
 
   Player.find({}, null, {
@@ -32,7 +32,7 @@ exports.create = function(req, res) {
 
 exports.read = function(req, res) {
   Player.findById(req.params.playerid, function(err, player) {
-    if (err) return res.send(err);
+    if (err) return res.send(404);
     res.json(player);
   });
 };

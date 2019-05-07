@@ -81,9 +81,9 @@ exports.create = function(req, res) {
       }
     });
 
-    Promise.all([promiseA, promiseB]).then(([count, json]) => {
-      json.count = count;
-      return res.json(json);
-    })
+  Promise.all([promiseA, promiseB]).then(([count, json]) => {
+    json.count = count;
+    return res.json(json);
+  });
 
 };

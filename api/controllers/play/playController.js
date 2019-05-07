@@ -12,27 +12,10 @@ exports.list = function(req, res) {
   const skip = page * size ;
 
   Play.getPaginatedPlays({}, skip, size, function(err, plays) {
-    if(err) {
-      res.send(err);
-    }
+    if (err) return res.send(err);
     res.json(plays);
   })
 };
-
-exports.search = function(req, res) {
-  const condition = {};
-  if (req.body && req.body.boardgame) {
-    condition['boardgame_name'] = req.body.boardgame
-  }
-
-  Play.getPaginatedPlays(condition, 0, null, function(err, plays) {
-    if(err) {
-      res.send(err);
-    }
-    res.json(plays);
-  })
-};
-
 
 exports.create = function(req, res) {
   const new_play = new Play(req.body);
@@ -53,7 +36,7 @@ exports.create = function(req, res) {
 
 exports.read = function(req, res) {
   Play.findById(req.params.playid, function(err, play) {
-    if (err) return res.send(err);
+    if (err) return res.send(404);
     res.json(play);
   });
 };
