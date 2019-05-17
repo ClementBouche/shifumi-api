@@ -24,6 +24,8 @@ var PlaySchema = new Schema({
   incomplete: {
     type: Boolean
   },
+  thumbnail: { type: String },
+  image: { type: String },
   scores: [{
     player_name: {
       type: String

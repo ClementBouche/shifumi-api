@@ -17,6 +17,7 @@ exports.list = function(req, res) {
   })
 };
 
+
 exports.create = function(req, res) {
   const new_play = new Play(req.body);
   // look for boardgame id
@@ -25,6 +26,9 @@ exports.create = function(req, res) {
   }, function(err, boardgame) {
     const xmlId = boardgame && boardgame.xmlapi_id ? boardgame.xmlapi_id : '';
     new_play.boardgame_xmlapi_id = xmlId;
+
+    const thumbnail = boardgame && boardgame.thumbnail ? boardgame.thumbnail : '';
+    new_play.thumbnail = thumbnail;
 
     new_play.save(function(err, play) {
       if (err) return res.send(err);

@@ -11,9 +11,9 @@ exports.checkUser = function(req, res, next) {
     var token = req.headers.authorization.split(' ')[1];
     if(token) {
       // verifies secret and checks exp
-      jwt.verify(token, config.secret, function(err, decoded) {      
+      jwt.verify(token, config.secret, function(err, decoded) {
         if (err) {
-          return res.json({ success: false, message: 'Failed to authenticate token.' });    
+          return res.status(403).send({ success: false, message: 'Failed to authenticate token.' });
         } else {
           // if everything is good, save to request for use in other routes
           req.decoded = decoded;
@@ -23,7 +23,7 @@ exports.checkUser = function(req, res, next) {
     } else {
       // if there is no token
       // return an error
-      return res.status(403).send({ 
+      return res.status(403).send({
           success: false, 
           message: 'Unreadeable token.' 
       });
@@ -31,7 +31,7 @@ exports.checkUser = function(req, res, next) {
   } else {
     // if there is no token
     // return an error
-    return res.status(403).send({ 
+    return res.status(403).send({
         success: false, 
         message: 'No token provided.' 
     });
@@ -46,9 +46,9 @@ exports.checkAdmin = function(req, res, next) {
     var token = req.headers.authorization.split(' ')[1];
     if(token) {
       // verifies secret and checks exp
-      jwt.verify(token, config.secret, function(err, decoded) {      
+      jwt.verify(token, config.secret, function(err, decoded) {
         if (err) {
-          return res.json({ success: false, message: 'Failed to authenticate token.' });    
+          return res.status(403).send({ success: false, message: 'Failed to authenticate token.' });
         } else {
           // if everything is good, save to request for use in other routes
           if(decoded.admin) {
@@ -56,7 +56,7 @@ exports.checkAdmin = function(req, res, next) {
             next();
           } else {
             // return an error
-            return res.status(403).send({ 
+            return res.status(403).send({
                 success: false, 
                 message: 'You are not admin.' 
             });
@@ -65,7 +65,7 @@ exports.checkAdmin = function(req, res, next) {
       });
     } else {
       // return an error
-      return res.status(403).send({ 
+      return res.status(403).send({
           success: false, 
           message: 'Unreadeable token.' 
       });
@@ -73,10 +73,9 @@ exports.checkAdmin = function(req, res, next) {
   } else {
     // if there is no token
     // return an error
-    return res.status(403).send({ 
+    return res.status(403).send({
         success: false, 
         message: 'No token provided.' 
     });
   }
 }
-

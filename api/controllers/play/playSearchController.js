@@ -18,16 +18,21 @@ const projection = {
 };
 
 exports.search = function(req, res) {
-  let size, page, skip, name, filters = {};
+  let size, page, skip, filters = {}, sort = {};
   // pages
   size = requestHelperService.getBodySize(req, 10);
   page = requestHelperService.getBodyPage(req);
   skip = page * size ;
 
+  sort = {
+    date: -1
+  }
+
   // 1 // boardgame
   if (req.body.boardgame) {
     const boardgame = req.body.boardgame.trim();
     filters['boardgame_name'] = new RegExp(boardgame, 'i');
+    sort['boardgame_name'] = 1;
   }
   // 2 // player
   if (req.body.player) {
@@ -35,15 +40,13 @@ exports.search = function(req, res) {
     filters['scores.player_name'] = new RegExp(player, 'i');
   }
 
-  console.log(filters);
-
   const promiseA = Play.countDocuments(filters)
     .then((count) => {
       return count;
     });
 
   const promiseB = Play.find(filters, projection, {
-      sort: { rank: 1, name: filters.name ? 1 : 0 },
+      sort: sort,
       limit: size,
       skip: skip
     })

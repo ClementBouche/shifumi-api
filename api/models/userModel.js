@@ -9,7 +9,9 @@ var UserSchema = new Schema({
     email: String,
     surname: String,
     lastname: String,
-    admin: Boolean
+    admin: Boolean,
+    thumbnail: { type: String },
+    image: { type: String },
 });
 
 module.exports = mongoose.model('Users', UserSchema);

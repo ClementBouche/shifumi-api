@@ -53,7 +53,9 @@ exports.boardgame_by_id = function(req, res) {
         // else updateboardgame
         const bg = boardgameReader.parseBoardgame(jsonReponse);
         // if ? preview = true return bgResponse without saving
-        if (req.query.preview === 'true') return res.json(bg);
+        if (req.query.preview === 'true') {
+          return res.json(bg);
+        }
         Boardgame.findOneAndUpdate({xmlapi_id: id}, bg, {new: true, upsert: true}, (err, document) => {
           if (err) return res.json({message: 'Error', error: err, bg: bg});
           res.json(document);
