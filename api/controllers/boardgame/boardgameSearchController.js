@@ -61,6 +61,18 @@ exports.create = function(req, res) {
   if (req.body.mechanics) {
     filters.thematics = {$in: req.body.thematics}
   }
+  // 6 // designer
+  if (req.body.people_name) {
+    const name = req.body.people_name.trim();
+    //filters['designers.name'] = new RegExp(name, 'i');
+    filters['$or'] = [
+      { 'designers.name': new RegExp(name, 'i') },
+      { 'artists.name': new RegExp(name, 'i') },
+    ];
+    projection.designers = 1;
+    projection.artists = 1;
+  }
+  console.log(filters);
 
   const promiseA = Boardgame.countDocuments(filters)
     .then((count) => {
