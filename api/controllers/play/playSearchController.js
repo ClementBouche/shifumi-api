@@ -11,7 +11,7 @@ const projection = {
   date: 1,
   place_name: 1,
   thumbnail: 1,
-  boardgame_xmlapi_id: 1,
+  boardgame_id: 1,
   boardgame_name: 1,
   playing_time: 1,
   incomplete:1,

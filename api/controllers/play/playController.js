@@ -24,8 +24,8 @@ exports.create = function(req, res) {
   Boardgame.findOne({
     name: new_play.boardgame_name
   }, function(err, boardgame) {
-    const xmlId = boardgame && boardgame.xmlapi_id ? boardgame.xmlapi_id : '';
-    new_play.boardgame_xmlapi_id = xmlId;
+    const id = boardgame && boardgame._id ? boardgame._id : '';
+    new_play.boardgame_id = id;
 
     const thumbnail = boardgame && boardgame.thumbnail ? boardgame.thumbnail : '';
     new_play.thumbnail = thumbnail;
@@ -34,7 +34,7 @@ exports.create = function(req, res) {
       if (err) return res.send(err);
       res.json(play);
     });
-  })
+  });
 };
 
 

@@ -12,8 +12,8 @@ var PlaySchema = new Schema({
   place_name: {
     type: String
   },
-  boardgame_xmlapi_id: {
-    type: Number
+  boardgame_id: {
+    type: String
   },
   boardgame_name: {
     type: String
