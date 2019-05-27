@@ -58,7 +58,7 @@ exports.create = function(req, res) {
     filters.mechanics = {$in: req.body.mechanics}
   }
   // 5 // mechanics
-  if (req.body.mechanics) {
+  if (req.body.thematics) {
     filters.thematics = {$in: req.body.thematics}
   }
   // 6 // designer
