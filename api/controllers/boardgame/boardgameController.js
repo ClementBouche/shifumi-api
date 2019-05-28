@@ -66,7 +66,7 @@ exports.create = function(req, res) {
 
 exports.read = function(req, res) {
   Boardgame.findById(req.params.boardgameid, function(err, boardgame) {
-    if (err) return res.send(err);
+    if (err) return res.sendStatus(500).send(err);
     res.json(boardgame);
   });
 };
