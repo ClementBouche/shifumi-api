@@ -32,13 +32,15 @@ exports.search = function(req, res) {
   // 1 // boardgame
   if (req.body.boardgame) {
     const boardgame = req.body.boardgame.trim();
-    filters['boardgame_name'] = new RegExp(boardgame, 'i');
+    // filters['boardgame_name'] = new RegExp(boardgame, 'i');
+    filters['boardgame_name'] = boardgame;
     sort['boardgame_name'] = 1;
   }
   // 2 // player name or id
   if (req.body.player) {
     const player = req.body.player.trim();
-    filters['scores.player_name'] = new RegExp(player, 'i');
+    // filters['scores.player_name'] = new RegExp(player, 'i');
+    filters['scores.player_name'] = player;
   }
 
   const promiseA = Play.countDocuments(filters)
