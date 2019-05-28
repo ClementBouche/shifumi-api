@@ -72,7 +72,6 @@ exports.create = function(req, res) {
     projection.designers = 1;
     projection.artists = 1;
   }
-  console.log(filters);
 
   const promiseA = Boardgame.countDocuments(filters)
     .then((count) => {

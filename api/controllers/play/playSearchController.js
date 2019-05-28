@@ -35,7 +35,7 @@ exports.search = function(req, res) {
     filters['boardgame_name'] = new RegExp(boardgame, 'i');
     sort['boardgame_name'] = 1;
   }
-  // 2 // player
+  // 2 // player name or id
   if (req.body.player) {
     const player = req.body.player.trim();
     filters['scores.player_name'] = new RegExp(player, 'i');

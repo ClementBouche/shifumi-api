@@ -32,7 +32,7 @@ exports.create = function(req, res) {
 
 exports.read = function(req, res) {
   Player.findById(req.params.playerid, function(err, player) {
-    if (err) return res.send(404);
+    if (err) return res.sendStatus(404);
     res.json(player);
   });
 };

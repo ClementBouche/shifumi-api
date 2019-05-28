@@ -40,7 +40,7 @@ exports.create = function(req, res) {
 
 exports.read = function(req, res) {
   Play.findById(req.params.playid, function(err, play) {
-    if (err) return res.send(404);
+    if (err) return res.sendStatus(404);
     res.json(play);
   });
 };
