@@ -11,6 +11,8 @@ var playerSchema = new Schema({
     type: Boolean,
     default: false
   },
+  avatar_image: String,
+  avatar_color: String,
   // global statistic data
   boardgames_count: { type: Number, default: 0 },
   plays_count: { type: Number, default: 0 },

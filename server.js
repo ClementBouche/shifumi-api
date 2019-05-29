@@ -19,6 +19,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 // use morgan to log requests to the console
 app.use(morgan('dev'));
