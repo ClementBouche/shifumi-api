@@ -29,14 +29,12 @@ exports.create = function(req, res) {
   });
 };
 
-
 exports.read = function(req, res) {
   Player.findById(req.params.playerid, function(err, player) {
-    if (err) return res.sendStatus(404);
+    if (err || !player) return res.sendStatus(404);
     res.json(player);
   });
 };
-
 
 exports.update = function(req, res) {
   Player.findOneAndUpdate(req.params.playerid, req.body, {
@@ -49,7 +47,7 @@ exports.update = function(req, res) {
 
 
 exports.delete = function(req, res) {
-  Player.remove({
+  Player.deleteOne({
     _id: req.params.playerid
   }, function(err, player) {
     if (err) return res.send(err);

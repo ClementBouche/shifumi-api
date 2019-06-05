@@ -22,6 +22,10 @@ const projection = {
   win_ratio:1
 };
 
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 exports.create = function(req, res) {
   let size, page, skip, name, filters = {};
   // pages
@@ -31,7 +35,7 @@ exports.create = function(req, res) {
 
   // 1 // name
   if (req.body.name) {
-    name = req.body.name.trim();
+    name = decodeURI(escapeRegExp(req.body.name)).trim();
     filters.name = new RegExp(name, 'i');
   }
 

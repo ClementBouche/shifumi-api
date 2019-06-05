@@ -12,19 +12,20 @@ module.exports = function(app) {
     .get(player.list)
     .post(tokenService.checkUser, player.create);
 
+  // player search controller
+  
+  app.route('/player/search')
+    .post(playerSearch.create);
+
+  // other controllers
+
+  app.route('/player/:playerid/statistic')
+    .get(statistic.player);
+
+  // player id routes
   app.route('/player/:playerid')
     .get(player.read)
     .put(tokenService.checkUser, player.update)
     .delete(tokenService.checkUser, player.delete);
-
-  // player search controller
-  
-  app.route('/player/search')
-    .post(playerSearch.create)
-
-  // other controllers
-
-  app.route('/player/statistic')
-  .get(statistic.player);
 
 };

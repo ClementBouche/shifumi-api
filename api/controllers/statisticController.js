@@ -31,16 +31,16 @@ exports.place = function(req, res) {
 // update global statistic data for players
 exports.player = function(req, res) {
   var getPlays = Play.find({}).exec();
-  var getPlayers = Player.find({}).exec();
+  var getPlayer = Player.findById(req.params.playerid).exec();
   var getBoardgames = Boardgame.find({}).exec();
-  Promise.all([getPlays, getPlayers, getBoardgames])
-    .then(([plays, players, boardgames]) => {
-      for (var i = 0; i < players.length; i++) {
-        var stats = statisticService.statsByPlayer(plays, boardgames, players[i].name);
-        Object.assign(players[i], stats);
-        players[i].save();
+  Promise.all([getPlays, getPlayer, getBoardgames])
+    .then(([plays, player, boardgames]) => {
+      if (player) {
+        var stats = statisticService.statsByPlayer(plays, boardgames, player.name);
+        Object.assign(player, stats);
+        player.save();
       }
-      res.json(players);
+      res.json(player);
     })
     .catch((error) => {
       res.send(error);
