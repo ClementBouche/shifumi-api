@@ -75,14 +75,14 @@ exports.statsByPlayer = function(plays, boardgames, playerName) {
       time += play.playing_time;
     } else {
       var bg = boardgames.find(
-        (bg) => bg.xmlapi_id === play.boardgame_xmlapi_id
+        (bg) => bg.id === play.boardgame_id
       );
       if(bg !== undefined) {
         time += bg.playing_time ;
       }
     }
     // boardgames
-    var boardgame = play.boardgame_xmlapi_id;
+    var boardgame = play.boardgame_id;
     if (boardgamesPlayed.indexOf(boardgame) === -1)
       boardgamesPlayed.push(boardgame);
     // boardgames

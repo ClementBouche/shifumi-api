@@ -30,20 +30,23 @@ exports.place = function(req, res) {
 
 // update global statistic data for players
 exports.player = function(req, res) {
-  var getPlays = Play.find({}).exec();
-  var getPlayer = Player.findById(req.params.playerid).exec();
-  var getBoardgames = Boardgame.find({}).exec();
-  Promise.all([getPlays, getPlayer, getBoardgames])
-    .then(([plays, player, boardgames]) => {
-      if (player) {
+  Player.findById(req.params.playerid)
+    .exec()
+    .then((player) => {
+      const playFilter = {};
+      playFilter['scores.player_name'] = player.name;
+      Promise.all([
+        Play.find(playFilter).exec(),
+        Boardgame.find({}).exec()
+      ]).then(([plays, boardgames]) => {
         var stats = statisticService.statsByPlayer(plays, boardgames, player.name);
         Object.assign(player, stats);
         player.save();
-      }
-      res.json(player);
+        return res.json(player);
+      });
     })
     .catch((error) => {
-      res.send(error);
+      return res.status(500).send(error);
     });
 }
 
