@@ -54,12 +54,14 @@ exports.create = function(req, res) {
     };
   }
   // 4 // mechanics
-  if (req.body.mechanics) {
-    filters.mechanics = {$in: req.body.mechanics}
+  if (req.body.mechanics && req.body.mechanics.length > 0) {
+    filters.mechanics = {$all: req.body.mechanics};
   }
   // 5 // mechanics
-  if (req.body.thematics) {
-    filters.thematics = {$in: req.body.thematics}
+  if (req.body.thematics && req.body.thematics.length > 0) {
+    console.log(req.body.thematics);
+    filters.thematics = {$all: req.body.thematics};
+    // filters.thematics = {$in: req.body.thematics};
   }
   // 6 // designer
   if (req.body.people_name) {
@@ -72,6 +74,7 @@ exports.create = function(req, res) {
     projection.designers = 1;
     projection.artists = 1;
   }
+  console.log(filters);
 
   const promiseA = Boardgame.countDocuments(filters)
     .then((count) => {

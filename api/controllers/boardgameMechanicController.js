@@ -22,6 +22,6 @@ exports.list = function(req, res) {
       }
     }
 
-    res.json(mechanics);
+    return res.json(mechanics);
   });
 };

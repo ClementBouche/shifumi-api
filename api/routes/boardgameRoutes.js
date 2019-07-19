@@ -33,13 +33,13 @@ module.exports = function(app) {
 
   // other controllers
 
-  app.route('/boardgame/mechanic')
+  app.route('/mechanic')
     .get(boardgameMechanic.list);
 
-  app.route('/boardgame/thematic')
+  app.route('/thematic')
     .get(boardgameThematic.list);
 
-  app.route('/boardgame/subdomain')
+  app.route('/subdomain')
     .get(boardgameSubdomain.list);
 
   app.route('/boardgame/statistic')
