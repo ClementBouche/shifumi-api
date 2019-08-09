@@ -12,7 +12,7 @@ const projection = {
   // pour affichage
   boardgames_count: 1,
   avatar_image: 1,
-  avatar_color: 1,
+  avatar_colors: 1,
   plays_count: 1,
   plays_incomplete_count: 1,
   plays_win_count: 1,
