@@ -75,7 +75,7 @@ exports.delete = function(req, res) {
 
 Play.getPaginatedPlays = function(condition, skip, limit, callback) {
   Play.find(condition, null, {
-      sort: { date: -1 },
+      sort: { date: -1, _id: -1 },
       skip: skip,
       limit: limit
     },

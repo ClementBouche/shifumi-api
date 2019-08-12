@@ -26,7 +26,8 @@ exports.search = function(req, res) {
   skip = page * size ;
 
   sort = {
-    date: -1
+    date: -1,
+    _id: -1
   }
 
   // 1 // boardgame
