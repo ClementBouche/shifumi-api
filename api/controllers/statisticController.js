@@ -52,18 +52,21 @@ exports.player = function(req, res) {
 
 // update global statistic data for players
 exports.boardgame = function(req, res) {
-  var getPlays = Play.find({}).exec();
-  var getBoardgames = Boardgame.find({}).exec();
-  Promise.all([getPlays, getBoardgames])
-    .then(([plays, boardgames]) => {
-      for (var i = 0; i < boardgames.length; i++) {
-        var stats = statisticService.statsByBoardgame(plays, boardgames[i]);
-        Object.assign(boardgames[i], stats);
-        boardgames[i].save();
-      }
-      res.json(boardgames);
+  Boardgame.findById(req.params.boardgameid)
+    .exec()
+    .then((boardgame) => {
+      const filter = {};
+      filter['boardgame_name'] = boardgame.name;
+      Play.find(filter)
+        .exec()
+        .then((plays) => {
+          var stats = statisticService.statsByBoardgame(plays, boardgame);
+          Object.assign(boardgame, stats);
+          boardgame.save();
+          return res.json(boardgame);
+        });
     })
     .catch((error) => {
-      res.send(error);
+      return res.status(500).send(error);
     });
 }

@@ -118,9 +118,6 @@ exports.statsByBoardgame = function(plays, boardgame) {
     places = [];
   for (var i = 0; i < plays.length; i++) {
     var play = plays[i];
-    if (play.boardgame_xmlapi_id !== boardgame.xmlapi_id) {
-      continue;
-    }
     // plays
     playsCount++;
     if (play.incomplete) {
