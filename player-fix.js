@@ -101,6 +101,8 @@ const transition = [
   ['Moez', 'Moez Jilani'],
   ['Roland', 'Roland de Massol'],
   ['Sarah (flo)', 'Sarah Cerizay'],
+  ['Cristopher', 'Christopher de Barros'],
+  ['Christopher De Barros', 'Christopher de Barros'],
 ];
 
 // options.limit = 100
