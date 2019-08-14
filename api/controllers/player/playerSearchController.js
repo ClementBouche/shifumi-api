@@ -27,7 +27,7 @@ function escapeRegExp(string) {
 }
 
 exports.create = function(req, res) {
-  let size, page, skip, name, filters = {};
+  let size, page, skip, name, sort = {}, filters = {};
   // pages
   page = requestHelperService.getBodyPage(req);
   size = requestHelperService.getBodySize(req, 100);
@@ -38,6 +38,13 @@ exports.create = function(req, res) {
     name = decodeURI(escapeRegExp(req.body.name)).trim();
     filters.name = new RegExp(name, 'i');
   }
+  if (req.body.minPlay) {
+    filters.plays_count = {$gte: req.body.minPlay};
+  }
+
+  if(req.body.order === 'name') sort['name'] = 1;
+  if(req.body.order === 'play') sort['plays_count'] = -1;
+  if(req.body.order === 'win') sort['win_ratio'] = -1;
 
   const promiseA = Player.countDocuments(filters)
     .then((count) => {
@@ -45,7 +52,7 @@ exports.create = function(req, res) {
     });
 
   const promiseB = Player.find(filters, projection, {
-      sort: { name: filters.name ? 1 : 0 },
+      sort: sort,
       limit: size,
       skip: skip
     })
