@@ -88,6 +88,7 @@ const transition = [
   ['Baptiste (Benji)', 'Baptiste Cuber'],
   ['Frank (Benji)', 'Frank Cuber'],
   ['Pol (Benji)', 'Pol Cuber'],
+  ['Raphaël (benji)', 'Raphaël Cuber'],
   ['Nicolas (Benji)', 'Nicolas Cuber'],
   ['Chaton', 'Marine Rougier'],
   ['Jenny', 'Jenny Herzog'],
@@ -139,4 +140,5 @@ Play.find({}, null, null)
         play.save();
       }
     })
+    console.log('fin');
   });
