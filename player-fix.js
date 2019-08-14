@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const config = require('./config'); // get our config file
 
 require('./api/models/playerModel');
+require('./api/models/playModel');
 
 mongoose.Promise = global.Promise;
 mongoose.connect(
@@ -16,6 +17,7 @@ mongoose.connect(
 );
 
 const Player = mongoose.model('Players');
+const Play = mongoose.model('Plays');
 
 const randomColors = [
   ['#001f3f', '#001f3f', 'hsla(210, 100%, 75%, 1.0)'],
@@ -49,6 +51,12 @@ const updatePlayer = function(player) {
   });
 }
 
+const updatePlayerName = function(player, newName) {
+  console.log('update', player.name, '->', newName);
+  player.name = newName;
+  player.save();
+}
+
 // Run script
 /**
  * Search all players
@@ -58,15 +66,77 @@ const condition = {};
 const options = {
   sort: {}
 };
+
+const transition = [
+  ['Bouche', 'Clément Bouché'],
+  ['Ghesline', 'Ghesline Jahidi'],
+  ['Gerald', 'Gerald Choqueux'],
+  ['Fiona', 'Fiona Grappin'],
+  ['Bertrand', 'Bertrand Théry'],
+  ['Fx', 'François-Xavier Mignen'],
+  ['Hélène', 'Hélène Mignen'],
+  ['Benji', 'Benjamin Mercier'],
+  ['Constance Mabiche', 'Constance Bouché'],
+  ['Caroline Mabiche', 'Caroline Cabaret'],
+  ['Cécile Mabiche', 'Cécile Bouché'],
+  ['Caroline Bouché', 'Caroline Cabaret'],
+  ['Caroline Mabiche', 'Caroline Cabaret'],
+  ['Louis (Benji)', 'Louis Cuber'],
+  ['Alexandra (Benji)', 'Alexandra Cuber'],
+  ['Aurélien (Benji)', 'Aurélien Cuber'],
+  ['Eymeric (Benji)', 'Eymeric Cuber'],
+  ['Baptiste (Benji)', 'Baptiste Cuber'],
+  ['Frank (Benji)', 'Frank Cuber'],
+  ['Pol (Benji)', 'Pol Cuber'],
+  ['Nicolas (Benji)', 'Nicolas Cuber'],
+  ['Chaton', 'Marine Rougier'],
+  ['Jenny', 'Jenny Herzog'],
+  ['Louise', 'Louise Guirbal'],
+  ['Mayoune', 'Marianne Chevé'],
+  ['Didou', 'Alexandre Chevé'],
+  ['Didine', 'Geraldine Chevé'],
+  ['Mehdi', 'Mehdi Daakir'],
+  ['Mick Borne', 'Mickaël Borne'],
+  ['Moez', 'Moez Jilani'],
+  ['Roland', 'Roland de Massol'],
+  ['Sarah (flo)', 'Sarah Cerizay'],
+];
+
 // options.limit = 100
 // options.skip = 10
 Player.find(condition, null, options, function(err, players) {
     if (err) console.error(err);
 
+    // players.forEach((player) => {
+    //   updatePlayer(player);
+    // });
+
     players.forEach((player) => {
-      updatePlayer(player);
+      const index = transition.findIndex((tuple) => tuple[0] === player.name);
+      if (index != -1) {
+        const tuple = transition[index];
+        updatePlayerName(player, tuple[1]);
+      }
     });
 
   }
 );
 
+Play.find({}, null, null)
+  .exec()
+  .then((plays) => {
+    plays.forEach((play) => {
+      let save = false;
+      play.scores.forEach((sc) => {
+        const index = transition.findIndex((tuple) => tuple[0] === sc.player_name);
+        if (index != -1) {
+          sc.player_name = transition[index][1];
+          save = true;
+        }
+      });
+      if (save) {
+        console.log('newPlay', play);
+        play.save();
+      }
+    })
+  });
