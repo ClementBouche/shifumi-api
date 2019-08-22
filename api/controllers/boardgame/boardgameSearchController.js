@@ -24,7 +24,7 @@ const projection = {
 };
 
 exports.create = function(req, res) {
-  let size, page, skip, name, filters = {};
+  let size, page, skip, name, filters = {}, sort = {};
   // pages
   size = requestHelperService.getBodySize(req, 10);
   page = requestHelperService.getBodyPage(req);
@@ -39,12 +39,12 @@ exports.create = function(req, res) {
     filters.name = new RegExp(name, 'i');
   }
   // 2 // players
-  // if (req.body.players) {
-  //   filters.min_players = {$gte: req.body.players};
-  // }
-  // if (req.body.players) {
-  //   filters.max_players = {$lte: req.body.players};
-  // }
+  if (req.body.min_players || req.body.max_players) {
+    const min = req.body.min_players ? req.body.min_players : 0;
+    const max = req.body.max_players ? req.body.max_players : 0;
+    filters['min_players'] = { $gte: min };
+    filters['max_players'] = { $lte: max };
+  }
   // 3 // time
   if (req.body.min_time || req.body.max_time) {
     filters.playing_time = {
@@ -59,14 +59,11 @@ exports.create = function(req, res) {
   }
   // 5 // mechanics
   if (req.body.thematics && req.body.thematics.length > 0) {
-    console.log(req.body.thematics);
     filters.thematics = {$all: req.body.thematics};
-    // filters.thematics = {$in: req.body.thematics};
   }
   // 6 // designer
   if (req.body.people_name) {
     const name = req.body.people_name.trim();
-    //filters['designers.name'] = new RegExp(name, 'i');
     filters['$or'] = [
       { 'designers.name': new RegExp(name, 'i') },
       { 'artists.name': new RegExp(name, 'i') },
@@ -76,13 +73,21 @@ exports.create = function(req, res) {
   }
   console.log(filters);
 
+  // sort
+  if (req.body.order_by) {
+    sort[req.body.order_by] = req.body.order || 1;
+  } else {
+    sort = { rank: 1, name: filters.name ? 1 : 0 };
+  }
+  console.log(sort);
+
   const promiseA = Boardgame.countDocuments(filters)
     .then((count) => {
       return count;
     });
 
   const promiseB = Boardgame.find(filters, projection, {
-      sort: { rank: 1, name: filters.name ? 1 : 0 },
+      sort: sort,
       limit: size,
       skip: skip
     })

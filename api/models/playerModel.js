@@ -7,10 +7,12 @@ var playerSchema = new Schema({
   name: {
       type: String
   },
+  // account information
   have_account: {
     type: Boolean,
     default: false
   },
+  user_id: String,
   avatar_image: String,
   avatar_colors: [String],
   // global statistic data

@@ -2,56 +2,9 @@
 
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var config  = require('./../../config'); // get our config file
+var config  = require('../../../config'); // get our config file
 
 var User = mongoose.model('Users');
-
-exports.list = function(req, res) {
-  const projection = {
-    username: 1,
-    email: 1,
-    admin: 1
-  };
-  User.find({}, projection, function(err, users) {
-    if (err) return res.send(err);
-    res.json(users);
-  });
-}
-
-exports.create = function(req, res) {
-  var new_user = new User(req.body);
-  new_user.save(function(err, user) {
-    if (err) return res.send(err);
-    res.json(user);
-  });
-}
-
-exports.read = function(req, res) {
-  User.findById(req.params.userid, function(err, user) {
-    if (err) return res.send(err);
-    res.json(user);
-  });
-};
-
-exports.update = function(req, res) {
-  User.findOneAndUpdate(req.params.userid, req.body, {
-    new: true
-  }, function(err, user) {
-    if (err) return res.send(err);
-    res.json(user);
-  });
-};
-
-exports.delete = function(req, res) {
-  User.remove({
-    _id: req.params.userid
-  }, function(err, user) {
-    if (err) return res.send(err);
-    res.json({
-      message: 'User successfully deleted'
-    });
-  });
-};
 
 exports.authenticate = function(req, res) {
   // find the user
@@ -91,5 +44,15 @@ exports.authenticate = function(req, res) {
         });
       }   
     }
+  });
+};
+
+exports.register = function(req, res) {
+  var newUser = new User(req.body);
+  newUser.activated = false;
+  newUser.admin = false;
+  newUser.save(function(err, user) {
+    if (err) return res.send(err);
+    res.json(user);
   });
 };
