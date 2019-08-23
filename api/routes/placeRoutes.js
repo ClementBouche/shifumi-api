@@ -16,5 +16,5 @@ module.exports = function(app) {
   app.route('/place/:placeid')
     .get(place.read)
     .put(tokenService.checkUser, place.update)
-    .delete(tokenService.checkUser, place.delete);
+    .delete(tokenService.checkAdmin, place.delete);
 };

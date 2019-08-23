@@ -9,37 +9,29 @@ module.exports = function(app) {
 
   // login controller
 
-  app.route('/user/authenticate')
+  app.route('/authenticate')
     .post(login.authenticate);
 
-  app.route('/user/register')
+  app.route('/register')
     .post(login.register);
-
-  // user controller
-
-  app.route('/user')
-    .get(tokenService.checkUser, user.list);
-
-  app.route('/user/:userid')
-    .get(tokenService.checkUser, user.read);
 
   // actions only on my account
 
-  app.route('/user/update')
-    .get(tokenService.checkUser, user.checkMyself, user.update);
+  app.route('/me')
+    .get(tokenService.checkUser, user.me)
+    .post(tokenService.checkUser, user.updateMe);
 
-  app.route('/user/:userid/claim')
-    .post(tokenService.checkUser, user.checkMyself, user.claim);
-
-  // admin controller
+  // user / admin controller
 
   app.route('/user')
+    .get(tokenService.checkUser, user.list)
     .post(tokenService.checkAdmin, admin.create);
 
   app.route('/user/:userid')
-    .post(tokenService.checkAdmin, user.update)
+    .get(tokenService.checkUser, user.read)
+    .post(tokenService.checkAdmin, admin.update)
     .delete(tokenService.checkAdmin, admin.delete);
 
-  app.route('/user/:userid/valid')
-    .post(tokenService.checkAdmin, admin.claim);
+  app.route('/user/:userid/claim')
+    .get(tokenService.checkAdmin, admin.claim);
 };

@@ -14,8 +14,17 @@ exports.create = function(req, res) {
   });
 }
 
+exports.update = function(req, res) {
+  User.findOneAndUpdate(req.params.userid, req.body, {
+    new: true
+  }, function(err, user) {
+    if (err) return res.send(err);
+    res.json(user);
+  });
+};
+
 exports.delete = function(req, res) {
-  User.remove({
+  User.deleteOne({
     _id: req.params.userid
   }, function(err, user) {
     if (err) return res.send(err);
@@ -31,43 +40,56 @@ exports.claim = function(req, res) {
 
     console.log('claiming....');
 
-    user.player_ids_claimed
-      .map((playerid) => updatePlayer(user, playerid))
-      .then((plays) => {
+    const promises = user.player_ids_claimed
+        .map((playerid) => updatePlayer(user, playerid, res));
+  
+    Promise.all(promises)
+      .then(() => {
         user.player_ids_claimed = [];
-        console.log('end claiming, play updated : ', plays.length);
         user.save().then(() => {
           res.json(user);
         });
-      });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.sendStatus(500).send('Error');
+      })
   });
 
 }
 
-const updatePlayer = function(user, playerid) {
+const updatePlayer = function(user, playerid, res) {
+  let player;
   return Player.findById(playerid)
     .exec()
-    .then((player) => {
-      console.log('player name claimed');
-      player.name = user.name;
-      return player.save();
+    .then((result) => {
+      player = result;
     })
     .then(() => {
       const filters = {};
-      filters['scores.player_name'] = player;
+      filters['scores.player_name'] = player.name;
       return Play.find(filters).exec();
     })
     .then((plays) => {
-      return plays.map((play) => updatePlay(user, play));
+      return plays.map((play) => updatePlay(user, player, play));
+    })
+    .then(() => {
+      console.log('player name claimed');
+      player.name = user.username;
+      player.user_id = user.id;
+      if (!player.name) {
+        throw Error('le nom est vide');
+      }
+      return player.save();
     });
 }
 
-const updatePlay = function(user, play) {
-  console.log('play claimed : ', play.boardgame_name);
+const updatePlay = function(user, player, play) {
+  console.log('play claimed : ', play.boardgame_name, ' for ', user.username);
   play.scores
-    .filter((sc) => sc.player_name === user.name)
+    .filter((sc) => sc.player_name === player.name)
     .forEach((score) => {
-      score.player_name = user.name;
+      score.player_name = user.username;
     });
   return play.save();
 }

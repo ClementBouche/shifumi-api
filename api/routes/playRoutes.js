@@ -16,5 +16,5 @@ module.exports = function(app) {
   app.route('/play/:playid')
     .get(play.read)
     .put(tokenService.checkUser, play.update)
-    .delete(tokenService.checkUser, play.delete);
+    .delete(tokenService.checkAdmin, play.delete);
 };

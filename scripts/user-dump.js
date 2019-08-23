@@ -1,9 +1,9 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const config   = require('./config'); // get our config file
+const config   = require('../config'); // get our config file
 
-require('./api/models/userModel');
+require('../api/models/userModel');
 
 mongoose.Promise = global.Promise;
 mongoose.connect(

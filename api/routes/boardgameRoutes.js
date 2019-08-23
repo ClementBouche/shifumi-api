@@ -36,5 +36,5 @@ module.exports = function(app) {
   app.route('/boardgame/:boardgameid')
     .get(boardgame.read)
     .put(tokenService.checkUser, boardgame.update)
-    .delete(tokenService.checkUser, boardgame.delete);
+    .delete(tokenService.checkAdmin, boardgame.delete);
 };

@@ -15,7 +15,6 @@ var UserSchema = new Schema({
     thumbnail: { type: String },
     image: { type: String },
     //
-    player_id: String,
     player_ids_claimed: [String],
 });
 

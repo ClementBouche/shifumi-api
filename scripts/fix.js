@@ -1,10 +1,10 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const config = require('./config'); // get our config file
+const config = require('../config'); // get our config file
 
-require('./api/models/boardgameModel');
-require('./api/models/playModel');
+require('../api/models/boardgameModel');
+require('../api/models/playModel');
 
 mongoose.Promise = global.Promise;
 mongoose.connect(

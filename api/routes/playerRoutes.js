@@ -26,6 +26,6 @@ module.exports = function(app) {
   app.route('/player/:playerid')
     .get(player.read)
     .put(tokenService.checkUser, player.update)
-    .delete(tokenService.checkUser, player.delete);
+    .delete(tokenService.checkAdmin, player.delete);
 
 };
