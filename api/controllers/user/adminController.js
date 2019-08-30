@@ -71,7 +71,7 @@ const updatePlayer = function(user, playerid, res) {
       return Play.find(filters).exec();
     })
     .then((plays) => {
-      return plays.map((play) => updatePlay(user, player, play));
+      return Promise.all(plays.map((play) => updatePlay(user, player, play)));
     })
     .then(() => {
       console.log('player name claimed');

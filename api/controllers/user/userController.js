@@ -1,8 +1,10 @@
 'use strict';
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var User = mongoose.model('Users');
+const User = mongoose.model('Users');
+
+const UserService = require('../../services/user/userService');
 
 exports.list = function(req, res) {
   const projection = {
@@ -38,8 +40,14 @@ exports.updateMe = function(req, res) {
     .then((user) => {
       const newUser = Object.assign(user, req.body);
       newUser.admin = user.admin;
-      newUser.save();
-      res.json(user);
+      return newUser.save();
     })
-    .catch((err) => res.sendStatus(500).send(err));
+    .then((user) => {
+      // TODO update player && plays
+      UserService.renameUser(user, user.username);
+      return user;
+    })
+    .then((user) => {
+      res.json(user);
+    });
 };
