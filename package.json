@@ -6,6 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
+    "dump": "mongodump --db 'Boardgamedb'",
+    "restore": "mongorestore dump/",
     "db": "node init-db.js"
   },
   "author": "",
