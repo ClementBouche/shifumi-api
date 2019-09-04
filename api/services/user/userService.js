@@ -12,7 +12,6 @@ exports.renameUser = function(user, newName) {
     if (!newName) {
       return Promise.reject('le nom est vide');
     }
-    console.log('renameUser');
 
     const filters = {};
     filters['user_id'] = user.id;
@@ -21,8 +20,6 @@ exports.renameUser = function(user, newName) {
 
     return Player.find(filters).exec()
       .then((players) => {
-        console.log('coucou');
-        console.log(players);
         return Promise.all(players.map((player) => PlayerService.renamePlayer(player, newName)));
       })
       .then(() => {
@@ -32,7 +29,6 @@ exports.renameUser = function(user, newName) {
         return user;
       })
       .catch((error) => {
-        console.log('ouch');
         console.error(error);
         return Promise.reject(error);
       });

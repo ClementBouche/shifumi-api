@@ -38,8 +38,6 @@ exports.claim = function(req, res) {
   User.findById(req.params.userid, function(err, user) {
     if (err) return res.send(err);
 
-    console.log('claiming....');
-
     const promises = user.player_ids_claimed
         .map((playerid) => updatePlayer(user, playerid, res));
   
@@ -51,7 +49,7 @@ exports.claim = function(req, res) {
         });
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         res.sendStatus(500).send('Error');
       })
   });
@@ -74,7 +72,6 @@ const updatePlayer = function(user, playerid, res) {
       return Promise.all(plays.map((play) => updatePlay(user, player, play)));
     })
     .then(() => {
-      console.log('player name claimed');
       player.name = user.username;
       player.user_id = user.id;
       if (!player.name) {
@@ -85,7 +82,6 @@ const updatePlayer = function(user, playerid, res) {
 }
 
 const updatePlay = function(user, player, play) {
-  console.log('play claimed : ', play.boardgame_name, ' for ', user.username);
   play.scores
     .filter((sc) => sc.player_name === player.name)
     .forEach((score) => {

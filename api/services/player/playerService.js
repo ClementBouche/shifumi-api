@@ -10,7 +10,6 @@ exports.renamePlayer = function(player, newName) {
     if (!newName) {
       return Promise.reject('le nom est vide');
     }
-    console.log('renamePlayer');
 
     const filters = {};
     filters['scores.player_name'] = player.name;

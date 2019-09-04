@@ -71,7 +71,6 @@ exports.create = function(req, res) {
     projection.designers = 1;
     projection.artists = 1;
   }
-  console.log(filters);
 
   // sort
   if (req.body.order_by) {
@@ -79,7 +78,6 @@ exports.create = function(req, res) {
   } else {
     sort = { rank: 1, name: filters.name ? 1 : 0 };
   }
-  console.log(sort);
 
   const promiseA = Boardgame.countDocuments(filters)
     .then((count) => {
