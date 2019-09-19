@@ -21,6 +21,9 @@ exports.boardgames = function(req, res) {
   }
   request
     .get(`${searchUrl}?query=${req.query.name}&type=boardgame`)
+    .on('error', function() {
+      return res.sendStatus(500).json({ message: 'Erreur de connexion à bggeek' });
+    })
     .on('data', function(chunk) {
       xmlResponse += chunk;
     })

@@ -39,10 +39,9 @@ exports.authenticate = function(req, res) {
           success: true,
           message: 'Enjoy your token!',
           token: token,
-          id: user.id,
-          username: user.username
+          user: user,
         });
-      }   
+      }
     }
   });
 };

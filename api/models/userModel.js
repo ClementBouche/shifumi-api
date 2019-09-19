@@ -16,6 +16,15 @@ var UserSchema = new Schema({
     image: { type: String },
     //
     player_ids_claimed: [String],
+    // ludotheque
+    library: [{
+      boardgame_id: String,
+      boardgame_name: String,
+      // owned / want to play
+      state: String,
+      // 1 - 10 rate
+      rating: Number
+    }]
 });
 
 module.exports = mongoose.model('Users', UserSchema);
