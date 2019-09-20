@@ -72,11 +72,10 @@ exports.create = function(req, res) {
     projection.artists = 1;
   }
 
-  // 7 library
-  // library must be a list of bg ids
-  if (req.body.library) {
+  // 7 list id
+  if (req.body.list_id) {
     filters['_id'] = {
-      '$in': req.body.library
+      '$in': req.body.list_id
     }
   }
 

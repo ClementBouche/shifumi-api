@@ -58,7 +58,7 @@ exports.librarySearch = function(req, res, next) {
         mode = req.body.library_mode;
       }
       const library = LibraryService.filter(user.library, mode);
-      req.body.library = library.map((item) => item.boardgame_id);
+      req.body.list_id = library.map((item) => item.boardgame_id);
       next();
     });
 }
