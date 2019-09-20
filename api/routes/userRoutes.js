@@ -1,11 +1,12 @@
 'use strict';
 
-var tokenService = require('../jwt/tokenService');
+const tokenService = require('../jwt/tokenService');
 
 module.exports = function(app) {
-  var user = require('../controllers/user/userController');
-  var login = require('../controllers/user/loginController');
-  var admin = require('../controllers/user/adminController');
+  const user = require('../controllers/user/userController');
+  const login = require('../controllers/user/loginController');
+  const admin = require('../controllers/user/adminController');
+  const boardgameSearch = require('../controllers/boardgame/boardgameSearchController');
 
   // login controller
 
@@ -34,4 +35,11 @@ module.exports = function(app) {
 
   app.route('/user/:userid/claim')
     .get(tokenService.checkAdmin, admin.claim);
+
+  // public library
+
+  app.route('/user/:userid/library')
+    .get(user.library)
+    .post(user.librarySearch, boardgameSearch.create);
+
 };

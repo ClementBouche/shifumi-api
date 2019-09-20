@@ -22,7 +22,7 @@ exports.boardgames = function(req, res) {
   request
     .get(`${searchUrl}?query=${req.query.name}&type=boardgame`)
     .on('error', function() {
-      return res.sendStatus(500).json({ message: 'Erreur de connexion à bggeek' });
+      return res.sendStatus(500);
     })
     .on('data', function(chunk) {
       xmlResponse += chunk;
@@ -46,6 +46,9 @@ exports.boardgame_by_id = function(req, res) {
   let xmlResponse = '';
   request
     .get(`${boardgameUrl}/${id}?stats=1`)
+    .on('error', function() {
+      return res.sendStatus(500);
+    })
     .on('data', (chunk) => {
       xmlResponse += chunk;
     })
@@ -73,6 +76,9 @@ exports.plays = function(req, res) {
   var xmlResponse = '';
   request
     .get(`${playsUrl}?username=cbouche&page=${req.query.page}`)
+    .on('error', function() {
+      return res.sendStatus(500);
+    })
     .on('data', function(chunk) {
       xmlResponse += chunk;
     })

@@ -33,19 +33,19 @@ exports.create = function(req, res) {
   // 0 rank filter (to hide extension)
   filters.rank = {$ne: 0, $ne: null};
 
-  // 1 // name
+  // 1 name
   if (req.body.name) {
     name = req.body.name.trim();
     filters.name = new RegExp(name, 'i');
   }
-  // 2 // players
+  // 2 players
   if (req.body.min_players || req.body.max_players) {
     const min = req.body.min_players ? req.body.min_players : 0;
     const max = req.body.max_players ? req.body.max_players : 0;
     filters['min_players'] = { $gte: min };
     filters['max_players'] = { $lte: max };
   }
-  // 3 // time
+  // 3 time
   if (req.body.min_time || req.body.max_time) {
     filters.playing_time = {
       $gte: req.body.min_time ? req.body.min_time : 0,
@@ -53,15 +53,15 @@ exports.create = function(req, res) {
       $ne: 0
     };
   }
-  // 4 // mechanics
+  // 4 mechanics
   if (req.body.mechanics && req.body.mechanics.length > 0) {
     filters.mechanics = {$all: req.body.mechanics};
   }
-  // 5 // mechanics
+  // 5 mechanics
   if (req.body.thematics && req.body.thematics.length > 0) {
     filters.thematics = {$all: req.body.thematics};
   }
-  // 6 // designer
+  // 6 designer
   if (req.body.people_name) {
     const name = req.body.people_name.trim();
     filters['$or'] = [
@@ -70,6 +70,14 @@ exports.create = function(req, res) {
     ];
     projection.designers = 1;
     projection.artists = 1;
+  }
+
+  // 7 library
+  // library must be a list of bg ids
+  if (req.body.library) {
+    filters['_id'] = {
+      '$in': req.body.library
+    }
   }
 
   // sort

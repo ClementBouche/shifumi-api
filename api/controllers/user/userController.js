@@ -3,8 +3,10 @@
 const mongoose = require('mongoose');
 
 const User = mongoose.model('Users');
+const Boardgame = mongoose.model('Boardgames');
 
 const UserService = require('../../services/user/userService');
+const LibraryService = require('../../services/user/libraryService');
 
 exports.list = function(req, res) {
   const projection = {
@@ -32,6 +34,33 @@ exports.me = function(req, res) {
     if (err) return res.send(err);
     res.json(user);
   });
+}
+
+exports.library = function(req, res, next) {
+  User.findById(req.params.userid)
+    .exec()
+    .then((user) => {
+      let mode;
+      if (req.body && req.body.library_mode && req.body.library_mode !== '') {
+        mode = req.body.library_mode;
+      }
+      const library = LibraryService.filter(user.library, mode);
+      res.json(library);
+    });
+}
+
+exports.librarySearch = function(req, res, next) {
+  User.findById(req.params.userid)
+    .exec()
+    .then((user) => {
+      let mode;
+      if (req.body && req.body.library_mode && req.body.library_mode !== '') {
+        mode = req.body.library_mode;
+      }
+      const library = LibraryService.filter(user.library, mode);
+      req.body.library = library.map((item) => item.boardgame_id);
+      next();
+    });
 }
 
 exports.updateMe = function(req, res) {
