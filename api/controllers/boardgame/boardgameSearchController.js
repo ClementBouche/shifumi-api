@@ -20,7 +20,12 @@ const projection = {
   plays_count:1,
   play_time:1,
   rank: 1,
-  subdomain: 1
+  bayes_note: 1,
+  average_note: 1,
+  votes_note: 1,
+  complexity: 1,
+  votes_complexity: 1,
+  subdomain: 1,
 };
 
 exports.create = function(req, res) {
