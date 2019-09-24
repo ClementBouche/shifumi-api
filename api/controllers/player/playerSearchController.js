@@ -27,7 +27,7 @@ function escapeRegExp(string) {
 }
 
 exports.create = function(req, res) {
-  let size, page, skip, name, sort = {}, filters = {};
+  let size, page, skip, name, userid, sort = {}, filters = {};
   // pages
   page = requestHelperService.getBodyPage(req);
   size = requestHelperService.getBodySize(req, 100);
@@ -37,6 +37,10 @@ exports.create = function(req, res) {
   if (req.body.name) {
     name = decodeURI(escapeRegExp(req.body.name)).trim();
     filters.name = new RegExp(name, 'i');
+  }
+  if (req.body.user_id) {
+    userid = decodeURI(escapeRegExp(req.body.user_id)).trim();
+    filters.user_id = userid;
   }
   if (req.body.minPlay) {
     filters.plays_count = {$gte: req.body.minPlay};
