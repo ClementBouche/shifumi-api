@@ -14,7 +14,9 @@ var UserSchema = new Schema({
   admin: Boolean,
   thumbnail: { type: String },
   image: { type: String },
-  //
+  // player
+  player_id: String,
+  player_name: String,
   player_ids_claimed: [String],
   // ludotheque
   library: [{

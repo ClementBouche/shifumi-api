@@ -27,18 +27,13 @@ var PlaySchema = new Schema({
   thumbnail: { type: String },
   image: { type: String },
   scores: [{
-    player_name: {
-      type: String
-    },
-    score: {
-      type: Number
-    },
-    win: {
-      type: Boolean
-    },
-    new: {
-      type: Boolean
-    }
+    player_name: String,
+    player_id: String,
+    score: Number,
+    win: Boolean,
+    new: Boolean,
+    role: String,
+    team: String
   }],
   comments: [{
     player_name: {type: String},

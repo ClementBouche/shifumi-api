@@ -13,6 +13,7 @@ exports.list = function(req, res) {
     username: 1,
     admin: 1,
     player_ids_claimed: 1,
+    player_id: 1
   };
   User.find({}, projection, function(err, users) {
     if (err) return res.send(err);
