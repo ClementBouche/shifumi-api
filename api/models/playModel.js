@@ -34,11 +34,6 @@ var PlaySchema = new Schema({
     new: Boolean,
     role: String,
     team: String
-  }],
-  comments: [{
-    player_name: {type: String},
-    title: {type: String},
-    content: {type: String}
   }]
 });
 
