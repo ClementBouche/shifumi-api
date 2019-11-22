@@ -44,7 +44,9 @@ const randomGradient = function() {
 
 const updatePlayer = function(player) {
   player.avatar_colors = ['#ddd', '#ddd', 'black'];
-  player.avatar_colors = randomGradient();
+  player.color_primary = randomGradient()[0];
+  player.color_accent = randomGradient()[1];
+  player.color_text = randomGradient()[2];
 
   player.save(() => {
     console.log(`${player.name} updated`, player.avatar_colors);

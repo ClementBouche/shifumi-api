@@ -63,6 +63,8 @@ var BoardgameSchema = new Schema({
     rank: Number,
     bayes_note: Number
   }]
+}, {
+  strict: true
 });
 
 module.exports = mongoose.model('Boardgames', BoardgameSchema);

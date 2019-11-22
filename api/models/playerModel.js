@@ -4,17 +4,14 @@ var Schema = mongoose.Schema;
 
 var playerSchema = new Schema({
   // metadata
-  name: {
-      type: String
-  },
+  name: String,
   // account information
-  have_account: {
-    type: Boolean,
-    default: false
-  },
-  user_id: String,
+  user_id: Schema.Types.ObjectId,
+  // avatar
   avatar_image: String,
-  avatar_colors: [String],
+  color_primary: String,
+  color_accent: String,
+  color_text: String,
   // global statistic data
   boardgames_count: { type: Number, default: 0 },
   plays_count: { type: Number, default: 0 },
@@ -24,6 +21,8 @@ var playerSchema = new Schema({
   players_count: { type: Number, default: 0 },
   play_time: { type: Number, default: 0 },
   win_ratio: { type: Number, default: 0 }
+}, {
+  strict: true
 });
 
 module.exports = mongoose.model('Players', playerSchema);

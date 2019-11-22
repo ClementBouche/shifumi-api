@@ -15,18 +15,20 @@ var UserSchema = new Schema({
   thumbnail: { type: String },
   image: { type: String },
   // player
-  player_id: String,
-  player_name: String,
-  player_ids_claimed: [String],
+  // player_id: Schema.Types.ObjectId,
+  // player_name: String,
+  player_ids_claimed: [Schema.Types.ObjectId],
   // ludotheque
   library: [{
-    boardgame_id: String,
+    boardgame_id: Schema.Types.ObjectId,
     boardgame_name: String,
     // owned / want to play
     state: String,
     // 1 - 10 rate
     rating: Number
   }]
+}, {
+  strict: true
 });
 
 module.exports = mongoose.model('Users', UserSchema);

@@ -3,42 +3,82 @@
 const mongoose = require('mongoose');
 
 const User = mongoose.model('Users');
-const Boardgame = mongoose.model('Boardgames');
+const Player = mongoose.model('Players');
 
 const UserService = require('../../services/user/userService');
 const LibraryService = require('../../services/user/libraryService');
 
+const projection = {
+  username: 1,
+  admin: 1,
+  player_ids_claimed: 1,
+  library: 1
+};
+
+const listProjection = {
+  username: 1,
+  admin: 1,
+  player_ids_claimed: 1,
+};
+
+const playerProjection = {
+  name: 1,
+  avatar_image: 1,
+  // statistic
+  boardgames_count: 1,
+  plays_count: 1,
+  plays_incomplete_count: 1,
+  plays_win_count: 1,
+  places_count: 1,
+  players_count: 1,
+  play_time: 1,
+  win_ratio: 1,
+  // avatar
+  avatar_image: 1,
+  color_primary: 1,
+  color_accent: 1,
+  color_text: 1,
+}
+
 exports.list = function(req, res) {
-  const projection = {
-    username: 1,
-    admin: 1,
-    player_ids_claimed: 1,
-    player_id: 1
-  };
-  User.find({}, projection, function(err, users) {
+  User.find({}, listProjection, function(err, users) {
     if (err) return res.send(err);
     res.json(users);
   });
 }
 
 exports.read = function(req, res) {
-  User.findById(req.params.userid, function(err, user) {
-    if (err) return res.send(err);
-    res.json(user);
+  User.findById(req.params.userid, projection)
+  .exec((err, user) => {
+    if (err || !user) return res.sendStatus(404);
+    // conditional 'lookup'
+    const condition = { name: user.username };
+    // TODO make it work
+    // const condition = { user_id: user._id };
+    // const condition = { user_id: mongoose.Types.ObjectId(user.id) };
+    Player.findOne(condition, playerProjection)
+      .exec((err, player) => {
+        if (err || !player) return res.json(user);
+        // return merged user && player
+        const result = Object.assign({}, user.toJSON(), {player: player.toJSON()});
+        res.json(result);
+      });
   });
 };
 
 // me functions
 
-exports.me = function(req, res) {
-  User.findById(req.decoded.id, function(err, user) {
-    if (err) return res.send(err);
-    res.json(user);
-  });
+exports.me = function(req, res, next) {
+  req.params['userid'] = req.decoded.id;
+  next();
+  // User.findById(req.decoded.id, projection, function(err, user) {
+  //   if (err) return res.send(err);
+  //   res.json(user);
+  // });
 }
 
 exports.library = function(req, res, next) {
-  User.findById(req.params.userid)
+  User.findById(req.params.userid, projection)
     .exec()
     .then((user) => {
       let mode;
@@ -51,7 +91,7 @@ exports.library = function(req, res, next) {
 }
 
 exports.librarySearch = function(req, res, next) {
-  User.findById(req.params.userid)
+  User.findById(req.params.userid, projection)
     .exec()
     .then((user) => {
       let mode;

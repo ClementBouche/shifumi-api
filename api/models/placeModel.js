@@ -21,6 +21,8 @@ var placeSchema = new Schema({
   plays_incomplete_count: { type: Number, default: 0 },
   players_count: { type: Number, default: 0 },
   play_time: { type: Number, default: 0 }
+}, {
+  strict: true
 });
 
 module.exports = mongoose.model('Places', placeSchema);

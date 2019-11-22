@@ -19,7 +19,7 @@ module.exports = function(app) {
   // actions only on my account
 
   app.route('/me')
-    .get(tokenService.checkUser, user.me)
+    .get(tokenService.checkUser, user.me, user.read)
     .post(tokenService.checkUser, user.updateMe);
 
   // user / admin controller
@@ -30,6 +30,7 @@ module.exports = function(app) {
 
   app.route('/user/:userid')
     .get(tokenService.checkUser, user.read)
+    // .get(user.read)
     .post(tokenService.checkAdmin, admin.update)
     .delete(tokenService.checkAdmin, admin.delete);
 

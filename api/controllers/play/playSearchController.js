@@ -8,14 +8,14 @@ const requestHelperService = require('../../services/requestHelperService');
 
 const projection = {
   xmlapi_id: 1,
-  date: 1,
-  place_name: 1,
-  thumbnail: 1,
-  boardgame_id: 1,
   boardgame_name: 1,
+  date: 1,
+  incomplete: 1,
+  place_name: 1,
   playing_time: 1,
-  incomplete:1,
-  scores:1
+  scores: 1,
+  boardgame_id: 1,
+  // thumbnail: 1,
 };
 
 exports.search = function(req, res) {
